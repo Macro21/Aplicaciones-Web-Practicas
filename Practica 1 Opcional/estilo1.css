@@ -1,0 +1,84 @@
+
+
+h1{
+   color:#2B0000;
+   font-size: 150%;
+}
+h2{
+    color:black;
+    font-size: 100%;
+    margin:auto;
+}
+body{
+    color:#0A0A0A;
+    background: radial-gradient(burlywood,#1C1C1C);
+    margin: 50px;
+}
+
+div{
+    font-size: 150%;
+    margin:auto;
+    text-align: center;
+    background: radial-gradient(burlywood,#1C1C1C);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    height: 135px;  
+}
+
+strong{
+    color:#450028;
+}
+table{
+    border-spacing: 20px 0px;
+    text-align: right;
+}
+td{
+    text-align: left;
+}
+
+#titulo {
+    color: black;
+    font-size: 200%;
+    margin: auto;
+    height: 60px;
+}
+
+#col2Fecha{
+    text-align: left;
+}
+.listaContrib{
+    color: darkblue;
+}
+
+#tablaPrograma{
+    border-collapse: collapse;
+}
+#tablaPrograma td, #tablaPrograma th{
+    border: 2px solid black;
+    vertical-align: center;
+    text-align: center;
+}
+
+.colPrograma{
+    background-color:darkred;
+}
+.horaPrograma{
+    background-color: bisque;
+}
+
+.sesionPrograma{
+    background-color: aquamarine;
+}
+
+.descansosPrograma{
+     background-color: blueviolet;
+}
+
+.especialesPrograma{
+    background-color: orange;
+}
+.asambleaPrograma{
+    background-color: pink;
+}
