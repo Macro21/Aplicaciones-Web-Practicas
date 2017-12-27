@@ -38,8 +38,9 @@ app.get("/", (request, response) => {
     response.redirect("/tasks.html");
 });
 
-app.get("/tasks", (request, response) => {
-    // Implementar
+app.get("/tasks", (request, response) => {//Implementado
+    response.status(200);
+    response.json(tasks);
 });
 
 app.post("/tasks", (request, response) => {

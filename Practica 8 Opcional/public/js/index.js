@@ -1,10 +1,11 @@
-"use strict";
 
+"use strict";
 /*
  * Manejador que se ejecuta cuando el DOM se haya cargado.
  */
 $(() => {
     // Solicita al servidor la lista de tareas, y la muestra en la página
+
     loadTasks();
 
     // Cuando se pulse alguno de los botones 'Eliminar', se llamará a
@@ -31,7 +32,21 @@ function taskToDOMElement(task) {
 }
 
 function loadTasks() {
-    // Implementar
+   
+   $.ajax({
+       type: "GET",
+       url: "/tasks",
+       // En caso de éxito, colocamos el texto con el resultado en el documento HTML
+        success: function(tasks, textStatus, jqXHR){
+            for(let task of tasks){
+                $("ul").append(taskToDOMElement(task));
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown){
+            alert("Se ha producido un error: " + errorThrown);
+        }
+   });
+  
 }
 
 function onRemoveButtonClick(event) {
@@ -49,5 +64,20 @@ function onRemoveButtonClick(event) {
 
 function onAddButtonClick(event) {
     // Implementar
+    let valor = $("#formNew input[type=text]").prop("value");
+    if(valor !== ""){
+        $.ajax({
+            type: "POST",
+            url: "/tasks",
+            contentType: "application/json",
+            data: JSON.stringify({ text: valor }),
+            success: function (task, textStatus, jqXHR){
+                $("ul").append(taskToDOMElement(task));
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                alert("Se ha producido un error: " + errorThrown);
+            }
+        });
+    }
 }
 
