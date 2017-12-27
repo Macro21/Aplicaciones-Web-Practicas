@@ -32,14 +32,13 @@ function taskToDOMElement(task) {
 }
 
 function loadTasks() {
-   
    $.ajax({
        type: "GET",
        url: "/tasks",
        // En caso de éxito, colocamos el texto con el resultado en el documento HTML
         success: function(tasks, textStatus, jqXHR){
             for(let task of tasks){
-                $("ul").append(taskToDOMElement(task));
+                $("ul").prepend(taskToDOMElement(task));
             }
         },
         error: function (jqXHR, textStatus, errorThrown){
@@ -53,13 +52,23 @@ function onRemoveButtonClick(event) {
     // Obtenemos el botón 'Eliminar' sobre el que se ha
     // hecho clic.
     let selected = $(event.target);
-
     // Obtenemos el elemento <li> que contiene el botón
     // pulsado.
     let liPadre = selected.parent();
-
     // Implementar el resto del método aquí.
-    // ...
+    let id = liPadre.data("id");
+    $.ajax({
+        type: "delete",
+        url: "/tasks/" + id,
+        contentType: "application/json",
+        data: JSON.stringify({id : id}),
+        success: function(data, textStatus, jqXHR){
+            liPadre.remove();
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Se ha producido un error: " + errorThrown);
+        }
+    });
 }
 
 function onAddButtonClick(event) {
@@ -72,7 +81,7 @@ function onAddButtonClick(event) {
             contentType: "application/json",
             data: JSON.stringify({ text: valor }),
             success: function (task, textStatus, jqXHR){
-                $("ul").append(taskToDOMElement(task));
+                $("ul").prepend(taskToDOMElement(task));
             },
             error: function (jqXHR, textStatus, errorThrown){
                 alert("Se ha producido un error: " + errorThrown);

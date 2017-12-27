@@ -54,8 +54,29 @@ app.post("/tasks", (request, response) => {
     response.json(newTask);
 });
 
+function taskDelete(id){
+    let i = 0;
+    let enc = false;
+    while(i < tasks.length && enc === false){
+        if(Number(tasks[i].id) === Number(id)){
+            tasks.splice(i,1);
+            enc = true;
+        }
+        i++;
+    }
+};
+
 app.delete("/tasks/:id", (request, response) => {
     // Implementar
+    let id = request.params.id;
+    if(!isNaN(id)){
+        taskDelete(id);
+        response.status(200);
+    }
+    else{
+        response.status(400);
+    }
+    response.end();
 });
 
 app.listen(config.port, function(err) {
