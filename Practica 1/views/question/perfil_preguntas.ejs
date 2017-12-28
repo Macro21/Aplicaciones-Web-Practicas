@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Bienvenido - Facebluff</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo">Preguntas seleccionadas aleatoriamente:</div>
+
+            <div id="preguntas">  
+                <ul>
+                    <% questions.forEach(question => { %>
+                        <a href ="/showQuestion?id=<%= question.id %>" ><li  class="listaPreguntas"><span><%= question.question %></span></li></a>
+                    <% }); %>
+                </ul>
+                <div class="boton"> <a href ="/addQuestion" >Crear pregunta</a></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

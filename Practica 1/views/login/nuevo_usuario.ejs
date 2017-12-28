@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_identificacion.css"/>
+</head>
+<body>
+    <div id="recuedroExterno">
+    <div id="logo">
+        <a href ="/login" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+        <hr>
+        <div id = "menu">
+           <a class="botonMenu" href="/login"> Entrar </a>
+            <a class="botonMenu" href="/nuevo_usuario"> Nuevo Usuario </a>
+        </div>
+        <hr>
+    </div>
+     <div class="titulo">Nuevo Usuario</div>
+     <%- include('../flashErrors'); %>
+    <div id = "usuarioNuevo"> 
+        <form action="/nuevo_usuario" method="POST" enctype="multipart/form-data">
+            <div id="formularioUsuarioNuevo">
+                <label id="email" for="txt_email">Email:</label>
+                <input id="cajaEmail" type="text" name="userEmail" <% if (lastInfo){ %> value="<%= lastInfo.userEmail %>"<% } %>>
+                <label id="contra" for="txt_contraseña"> Contraseña </label>
+                <input  id="cajaContra" type="password" name="password" <% if (lastInfo){ %> value="<%= lastInfo.password %>"<% } %>>  
+                 <label id="nombre" for="txt_nombre"> Nombre Completo </label>
+                <input  id="cajaNombre" type="text" name="fullName"<% if (lastInfo){ %>value="<%= lastInfo.fullName %>"<% } %>> 
+                <label id="sexo" for="txt_sexo"> Sexo </label>
+                <div class="radio">
+                    <label ><input type="radio" name="gender" value="M" <% if (lastInfo && lastInfo.gender === "M"){ %>checked<% } %>>Masculino</label> 
+                    <label ><input type="radio" name="gender" value="F"<% if (lastInfo && lastInfo.gender === "F"){ %>checked<% } %>>Femenino</label>
+                    <label ><input type="radio" name="gender" value="O" <% if (lastInfo && lastInfo.gender === "O"){ %>checked<% } %>>Otro</label>
+                </div>
+                 <label id="fecha" for="txt_fecha"> Fecha de Nacimiento </label>
+                <input  id="cajaFecha" type="date" name="birthdate" <% if (lastInfo){ %>value="<%= lastInfo.birthdate %>"<% } %>>
+                 <label id="imagenPerfil" for="txt_imagenPerfil"> Imagen de Perfil </label>
+                <input type="file" name="image">
+            </div>
+            <div >
+                <input class="boton" type="submit" value="Crear Usuario" />
+            </div>
+        </form>
+        <%- include('../flash'); %>
+    </div>
+    </div>
+</body>
+</html>

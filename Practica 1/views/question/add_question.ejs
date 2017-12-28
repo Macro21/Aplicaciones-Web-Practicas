@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <%- include('../flashErrors'); %>
+            <div class="titulo2">Escribe tu pregunta</div>
+            <form action="/addQuestion" method="POST" class="formularioPreguntas">
+                <input id = "cajaPregunta" type="text" name="question" value = "" >
+                <div class="titulo2">Escribe tus respuestas(una por linea)</div>
+                <textarea id="areaRespuestas" rows="4" cols="83" name="respuestas" ></textarea>
+                <input class="boton" type="submit" value="Enviar">
+            </form>
+
+            <%- include('../flash'); %>
+        </div>
+    </div>
+</body>
+</html>

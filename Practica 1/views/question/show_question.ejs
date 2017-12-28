@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Bienvenido - Facebluff</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo"><%= question[0].question %></div>
+            <% if (!answered) { %>
+                <div class="contestarPregunta">  
+                    <h2>No has contestado a esta pregunta.</h2>
+                    <div id="botonContestar"> <a href ="/showAnswers?id=<%= question[0].idQuestion %>" >Contestar pregunta</a></div>
+                </div>
+            <% } 
+            else{ %>
+                <div class="contestarPregunta">  
+                    <h2>Ya has contestado a esta pregunta.</h2>
+                </div>
+            <% } %>
+            <%- include('../flash'); %>
+            <div id="amigosContestadoPregunta">
+                    <h2>Los siguientes amigos han contestado la pregunta:</h2>
+                    <% if (resultFriends) { %>
+                        <% resultFriends.forEach(friend =>{ %>
+                            <form action="/guessAnswer" method="GET">
+                                <ul id = "amigosPreguntas">
+                                    <li><div id = "infoAmigo"><img class="fotoAmigo" src="/image/<%= friend.image %>">
+                                    <%= friend.fullName %></div>
+                                        <div>
+                                            <% if (friend.guessed  === 1) { %>
+                                            <h3 id= "acierto"> Has acertado! </h3>
+                                        <% } else if (friend.guessed === 0) { %>
+                                                <h3 id ="fallo"> Has fallado! </h3>
+                                        <%  } else { %>
+                                            <input class = "boton2" type="submit" value = "Adivinar" >
+                                        <% } %>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <input type="hidden" name="idQuestion" value = "<%=  question[0].idQuestion %>">
+                                <input type="hidden" name="friendEmail" value = "<%=  friend.email %>">
+                                <input type="hidden" name="friendName" value = "<%=  friend.fullName %>">
+                                <input type="hidden" name="txtQuestion" value = "<%=  question[0].question %>">
+                            </form>
+                        <% });
+                    } else { %>
+                        <div class="mensajeAmigos"> ¡No hay amigos que hayan contestado a esta pregunta! </div>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,494 @@
+body{
+    margin-top: 5%;
+    background-image: url('../images/fondo3.jpg');
+    background-color: blue;
+}
+#logo{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+#menu{
+    display:grid;
+    grid-template-rows: 50px;
+    grid-template-columns: 50px 50px 60px 90px 90px 160px;
+    grid-column-gap: 50px;
+    align-items: center;
+}
+hr{
+    width:85%;
+    color:white;
+}
+#puntos{
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    color: floralwhite;
+    margin-left: -1%;
+    font-family: "Chiller";
+    font-size: 200%;
+    font-weight: bold;
+    text-decoration: none;
+    padding-left: 10%;
+}
+.botonMenu{
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    color: floralwhite;
+    margin-left: -1%;
+    font-family: "Chiller";
+    font-size: 200%;
+    font-weight: bold;
+    text-decoration: none;
+    padding-left: 20%;
+}
+#recuadroExterno{
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: -4%;
+    padding-bottom: 4%;
+    width: 70%;
+    border: 5px solid;
+    border-color: #ff63b1;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+.contenido{
+    margin-left: 10%;
+    margin-right:10%;
+}
+.titulo{
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 200%;
+    font-weight: bold;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    color: floralwhite;
+}
+.titulo2{
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 120%;
+    font-weight: bold;
+    margin-top: 1%;
+    margin-bottom: 2%;
+    color: floralwhite;
+}
+
+#perfil{  
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom:3%;
+    width: 80%; 
+    height: 150px; 
+    border: 3px solid #555;
+    border-color: floralwhite;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    display: flex;
+    justify-content: center;
+}
+#botonesPerfil{
+    display:grid;
+    grid-template-rows: 100px;
+    grid-template-columns: 200px 350px;
+    grid-column-gap: 50px;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: -8%;
+}
+#formularioAñadirFoto{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.botonPerfil{
+    padding-left:1px;
+    width:200px;
+    height: 30px;
+    margin:1%;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 150%;
+    font-weight: bold;
+    color:black;
+}
+#subirFoto{
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-bottom: 2%;
+    border: 3px solid #555;
+    border-color: floralwhite;
+    padding:1%;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    opacity:0.8;
+    color:white;
+    display: flex;
+    flex-direction: column;
+    padding-left: 30px;
+    justify-content: center;
+}
+.foto{
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    border-color: black;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+#galery{
+    display:grid;
+    grid-template-rows: 20%;
+    grid-template-columns: 25% 25% 25%;
+    grid-column-gap: 15%;
+    grid-row-gap: 10%;
+    margin-bottom: 2%;
+    padding-left:5%;
+    padding-right: 5%;
+}
+#datos{
+    font-family:sans-serif;
+    font-size: 100%;
+    color:black;
+    padding-top: 15px;
+    
+}
+ul{
+    list-style: none;
+}
+#nombre{
+    font-weight: bold;
+}
+.boton{
+    margin-left:35%;
+    margin-right: 30%;
+    margin-bottom:1%;
+    width: 200px; 
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 150%;
+    font-weight: bold;
+    color:black;
+}
+a{
+    color: black;
+    text-decoration: none;
+}
+#solicitudes{  
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom:1%;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+}
+#solicitudes >li{
+    display:flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    align-items: center;
+}
+.botonesSolicitud{
+    display: flex;
+    justify-content: space-between;
+    margin-right: 3%;
+    margin-left: auto;
+    width:35%;
+}
+.amigoSolicitud{
+    height: 100px;
+    width: 100px;
+    margin-right: 3%;
+}
+
+#busqueda{  
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom:1%;
+    height: 40px;
+    border-color: floralwhite;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    padding-left:3%;
+    padding-top:1%;
+    padding-bottom:1%;
+    display: flex;
+    justify-content: space-around;
+}
+#barraBusqueda{
+    width:50%;
+    height: 17px;
+    margin-top: 1.5%;
+}
+#textoBusqueda{
+    margin-top: 2%;
+}
+.boton2{
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: #ff63b1;
+    opacity:0.8;
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 150%;
+    font-weight: bold;
+    color:white;
+    width:auto;
+    padding-top:2%;
+    padding-bottom:2%;
+    padding-left: 1%;
+    padding-right: 1%;
+    margin-top: 3%;
+    margin-left: -25%;
+    margin-right: 25%;
+    display: flex;
+    align-items: center;
+}
+#amigos{  
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom:3%; 
+    border: 3px solid #555;
+    border-color: floralwhite;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    padding-left:3%;
+    padding-right:3%;
+    
+}
+#amigos >li{
+    margin-left: 10%;
+    display:flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    align-items: center;
+   
+}
+.fotoAmigo{
+    height: 100px;
+    width: 100px;
+    margin-right: 3%;
+    border-radius: 20px;
+    border-color: black;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+.formularioModificacion{
+    border: 3px solid floralwhite;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 2%;
+    display: grid;
+    grid-template-areas: "col1 col2";
+    text-align: center;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    margin-left: 5%;
+    margin-right: 5%;
+    color:white;
+}
+
+#cajaEmail, #cajaContra, #cajaNombre{
+    width: 440px;
+}
+
+#email, #contra{
+    text-align: left;
+    width: 80px;
+    color:floralwhite;
+}
+.radio,label{
+    text-align: left;
+    color:floralwhite;
+}
+#cajaFecha{
+    width: 30%;
+}
+
+.listaPreguntas{
+    text-align: left;
+    color: black;
+    font-size: 140%;
+    margin-left: 15%;
+
+}
+
+span{
+    background-color: beige;
+    width: 80%;
+    display:block;
+    margin-bottom: 5px;
+}
+
+#preguntas{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+#preguntas>ul{
+    width:120%;
+}
+.flash{
+    align-self: center;
+	text-align: center;
+	color: rgb(238, 95, 131);
+	font-family: "Comic Sans MS";
+    font-style: italic;
+	font-size: 130%;
+    font-weight: bold;
+    margin-top: 1%;
+    margin-bottom:3%;
+}
+
+.mensajeAmigos{
+    text-align: center;
+    color: rgb(238, 95, 131);
+    font-family: "Comic Sans MS";
+    font-style: italic;
+	font-size: 130%;
+    font-weight: bold;
+}
+.nrPreguntas{
+    text-align: center;
+}
+.formularioPreguntas{
+    text-align: center;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+#cajaPregunta{
+    width: 600px;
+    height: 30px;
+}
+
+#areaRespuestas{
+    text-align: center;
+    margin-bottom: 2%;
+}
+
+#botonContestar{
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    width: 280px;
+    background: white;
+    opacity:0.8;
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 150%;
+    font-weight: bold;
+    color:black;
+    align-self:center;
+}
+.contestarPregunta, #amigosContestadoPregunta{
+    margin-left: 5%;
+    margin-right:5%;
+    color:white;
+}
+
+#cajaRespuestaOtro{
+    margin-left: 1%;
+    margin-top: 0.5%;
+    width: 85%;
+    height: 20px;
+    margin-bottom: 0.5%;
+}
+#amigosPreguntas{
+    margin-bottom:3%;
+    border: 3px solid floralwhite;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    background: white;
+    opacity:0.8;
+    padding-left:3%;
+    padding-right:3%;
+}
+
+#amigosPreguntas > li{
+    color:black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#infoAmigo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 60%;
+}
+
+#opinion{
+    text-align: center;
+    font-family: 'PT Serif', serif;
+    font-size: 150%;
+    
+    margin-top: 1%;
+    margin-bottom: 2%;
+    margin-left: -5%;
+    color: floralwhite;
+}
+#acierto{
+    color: rgb(107, 233, 159);
+}
+#fallo{
+    color:rgb(240, 87, 87);
+}
+.caja_errores{
+    padding: 1%;
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 3px solid rgb(199, 33, 33);
+    margin-bottom: 2%;
+    color: white;
+}
+.caja_errores>ul{
+    list-style-type: square;
+}
+
+#fotoIcono{
+    width: 50px;
+    height: 50px;
+}

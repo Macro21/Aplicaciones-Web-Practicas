@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/login" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo">Modificar Usuario</div>
+            <%- include('../flashErrors'); %>
+                <form action="/perfil_modificar" method="post" enctype="multipart/form-data">
+                    <div class="formularioModificacion">
+                        <label id="email">Email:</label>
+                        <input id="cajaEmail" type="text" name="userEmail" value= "<%= currentEmail %>" >
+                        <label id="contra"> Contraseña </label>
+                        <input  id="cajaContra" type="password" name="password" value= "<%= currentPassword %>">  
+                        <label id="nombre"> Nombre Completo </label>
+                        <input  id="cajaNombre" type="text" name="fullName" value= "<%= currentName %>" > 
+                        <label id="sexo"> Sexo </label>
+                        <div class="radio"> 
+                            <label ><input type="radio" name="gender" value="M" <% if(currentGender == "M"){ %> checked <% } %> >Masculino</label>
+                            <label ><input type="radio" name="gender" value="F" <% if(currentGender == "F"){ %> checked <% } %> >Femenino</label>
+                            <label ><input   type="radio" name="gender" value="O" <% if(currentGender == "O"){ %> checked <% } %> >Otro</label>
+                        </div>
+                        <label id="fecha"> Fecha de Nacimiento </label>
+                        <input  id="cajaFecha" type="date" name="birthdate" value="<%= currentBirthdate %>"  >
+                        <label id="imagenPerfil"> Imagen de Perfil </label>
+                        <input  id="imagenPerfil" type="file" name="image"  >
+                    </div>
+                        <input class="boton" type="submit" value="Modificar Usuario" />
+                </form>
+                <%- include('../flash'); %>
+        </div>
+    </div>
+</body>
+</html>

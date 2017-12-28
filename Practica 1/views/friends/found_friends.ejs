@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+    <div id="logo">
+        <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+        <%- include('../header'); %>
+    </div>
+    <div class="titulo">Resultados busqueda</div>
+    
+    <% if(result) {
+        result.forEach(friend => { %>
+        <ul id="solicitudes">       
+            <li><img class="fotoAmigo" src="/image/<%= friend.image %>"><%= friend.fullName %><div class="botonesSolicitud">
+                <form method="POST" action="/friend_request">
+                    <input name = "friendEmail" type="hidden" value = "<%= friend.email %>" >
+                    <input class="boton2" type="submit" value="Enviar solicitud de amistad"/>
+                </form>
+            </li>
+        </ul>
+    <% });
+    } else { %>
+        <div><label class="mensajeAmigos"> No hay usuarios con ese nombre! </label></div>
+    <% } %>
+</body>
+</html>

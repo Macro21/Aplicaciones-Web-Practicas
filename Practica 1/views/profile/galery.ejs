@@ -1,0 +1,10 @@
+
+    <% if(galery) {%>
+        <div id = "galery">
+            <%galery.forEach(data => { %>
+                <img class = "foto" src = "/image/<%= data.image %>">      
+        <% }); %>
+    </div>
+    <% }else{%>
+        <div class="titulo2">No dispone de fotos en su galería</div>
+    <%}%>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_identificacion.css"/>
+</head>
+<body>
+    <div id="recuedroExterno">
+   <div id="logo">
+        <a href ="/login" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+        <hr>
+       <div id = "menu">
+           <a class="botonMenu" href="/login"> Entrar </a>
+            <a class="botonMenu" href="/nuevo_usuario"> Nuevo Usuario </a>
+        </div>
+       <hr>
+    </div>
+    <div class="titulo">Entrar</div>
+    <%- include('../flashErrors'); %>
+    <div id = "entrar">
+        <form action="/login" method="POST">
+            <div class="formularioEntrar">
+                <label id="email" for="txt_email">Email:</label>
+                <input id="cajaEmail" type="text" name="userEmail" id="txt_email" <% if (lastInfo){ %> value="<%= lastInfo.userEmail %>"<% } %>>
+                <label id="contra" for="txt_contraseña"> Contraseña </label>
+                <input  id="cajaContra" type="password" name="password" id="txt_contraseña" >
+            </div>
+            <div>
+                <input class="boton" type="submit" value="Conectar" />
+            </div>
+        </form>
+        <%- include('../flash'); %>
+    </div>
+</div>
+
+</body>
+</html>

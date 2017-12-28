@@ -1,0 +1,24 @@
+
+
+nota** base de datos, poner on delete cascade
+
+nota** validacion de formularios (comprobar que haya una respuesta pulsada al responder)
+
+onclick del form de aceptar petis de amistad. pasa algo si los from tienen divs y otras cosas de diseño?
+quitar
+
+ mensajes de error mas finos, hay 404 or todas partes ??
+ errores estado 500 con el end 
+
+
+nota** no guardar las petis rechazadas en la bd
+
+ preguntar si se puede pasar el id de las preguntas por la url para poder coger las respuestas o como hacerlo
+
+ post o get en answer
+
+ que es mejor buscar la pregunta en guessAnswer o pasarsela por el boton de adivina
+
+ errores 404 por todas partes
+
+ preguntar si el score se tiene que actualizar justo despues de adivinar

@@ -1,0 +1,10 @@
+<% if(errors){ %>
+    <div class = "caja_errores">
+        La información introducida en el formulario es incorrecta:
+        <ul>
+        <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+        <% }); %>
+        </ul>
+    </div>
+<% } %>

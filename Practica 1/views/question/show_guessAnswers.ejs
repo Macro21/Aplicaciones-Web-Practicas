@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Bienvenido - Facebluff</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo"><%= question %></div>
+            <div id = "opinion">¿Que crees que ha respondido <strong><%= name %></strong>?</div>
+            <form action="/checkAnswer" method="POST">
+                <div id="preguntas"></div>
+                <ul>
+                    <% answers.forEach(info => { %>       
+                        <li  class="listaPreguntas"><span><input type="radio" name="idAnswer" value="<%= info.id %>" ><%= info.answer %></span></li>
+                    <% }); %>
+                </ul>
+                <input type ="hidden" name = "idQuestion" value="<%= answers[0].idQuestion %>">
+                <input type ="hidden" name = "friendEmail" value="<%= friendEmail %>">
+                <input class="boton" type="submit" value="Responder"/>
+            </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<div> <img class = "foto" src = "/image/<% if(imageF) { %><%= imageF %><% } else { %><%= image %> <% } %>"> </div>
+<div id ="datos">
+<ul>
+    <li id="nombre"> <%= nombreUsuario %> </li>
+    <li> <%= edad %> años</li>
+    <% let genero;
+        if(sexo === 'M'){
+            genero = "Hombre";
+        }
+        else if (sexo === 'F'){
+            genero = "Mujer";
+        } else {
+            genero = "Otro";
+    } %> 
+    <li><%= genero %></li>
+    <li><%= scoreF %> puntos</li>
+</ul>
+</div>

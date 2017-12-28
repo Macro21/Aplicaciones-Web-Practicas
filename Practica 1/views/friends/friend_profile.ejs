@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo">Perfil de: <%= nombreUsuario %></div>
+            <div id = "perfil"> 
+                <%- include('../profile/profile_info'); %>
+            </div>
+            <div class="titulo">Galería de <%= nombreUsuario %>:</div>
+            <%- include('../profile/galery'); %>
+            <div class = "boton"><a href ="/perfil_amigos" >Volver</a></div>
+        </div>
+    </div>
+</body>
+</html>

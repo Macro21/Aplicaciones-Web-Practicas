@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class= "contenido">
+            <div class="titulo">Tu perfil</div>
+            <div id = "perfil"> 
+                    <%- include('profile_info'); %>
+            </div>
+            <form action="/upload_image" method="POST" enctype="multipart/form-data" id="formularioAñadirFoto">
+                <div id= "subirFoto">
+                    Elegir foto para subir:
+                    <input  type="file" name="image">
+                </div>
+                <%- include('../flash'); %>
+                <div id="botonesPerfil">
+                        <div class="botonPerfil"> <a href ="/perfil_modificar" >Modificar perfil</a></div>
+                        <div> <input class="boton" type="submit" value="Subir Foto" /></div>
+                </div>
+            </form>
+            <div class="titulo">Galería:</div>
+            <%- include('galery'); %>
+        </div>
+    </div>
+</body>
+</html>

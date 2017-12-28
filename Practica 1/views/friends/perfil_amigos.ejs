@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Bienvenido - Facebluff</title>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/stylesheets/estilo_perfil.css"/>
+</head>
+<body>
+    <div id="recuadroExterno">
+        <div id="logo">
+            <a href ="/perfil_principal" > <img width = "800px" ; src="/images/Logo3.png " alt="logo de la aplicacion"></a>
+            <%- include('../header'); %>
+        </div>
+        <div class="contenido">
+            <div class="titulo">Solicitudes de amistad</div>
+                <% if (result) { %>
+                        <ul id="solicitudes">
+                            <% result.forEach(req =>{ %>
+                            <li><img class="fotoAmigo" src="/image/<%= req.image %>">
+                                <a href="/friendProfile?email=<%= req.email %>"><%= req.fullName %></a>
+                                    <div class="botonesSolicitud">
+                                        <form action="/aceptRequest" method="POST">
+                                            <input type="hidden" value="<%= req.email %>" name = "petitionerEmail"/>
+                                            <div><input class="boton2" type="submit" value="Aceptar"/></div>
+                                        </form>
+                                        <form action="/refuseRequest" method="POST">
+                                            <input type="hidden" value="<%= req.email %>" name = "petitionerEmail"/>
+                                            <div><input class="boton2" type="submit" value="Rechazar"/></div>
+                                        </form>
+                                    </div>
+                            </li>
+                            <% }); %>
+                        </ul>
+                
+                <% } else { %>
+                    <div class="mensajeAmigos"> No hay solicitudes de amistad! </div>
+                <% } %>
+                
+            
+            <div class="titulo">Buscar amigos</div>
+            <form action="/friends_by_name" method="GET">
+                <div id="busqueda">
+                        <div id="textoBusqueda">Buscar por nombre: </div><input id ="barraBusqueda" type= "text" name="friendName">
+                        <div><input class="boton2" type="submit" value="Buscar" /></div>
+                </div>
+            </form>
+            <div class="titulo">Mis amigos</div>
+            <% if (resultFriends) { %>
+                <% resultFriends.forEach(friend =>{ %>
+                    <ul id="amigos">
+                        <li>
+                            <img class="fotoAmigo" src="/image/<%= friend.image %>"><a href="/friendProfile?email=<%= friend.email %>"><%= friend.fullName %></a>
+                        </li>
+                    </ul>
+                <% });
+            } else { %>
+                <div class="mensajeAmigos"> ¡Haz nuevos amigos en Facebluff! </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
