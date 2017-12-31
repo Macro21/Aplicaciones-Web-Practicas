@@ -41,14 +41,22 @@ function mostrarPanelPrincipal(user){
 
 function header(user){
     let cabecera = 
-    '<header class="page-header">' + 
-        '<img src="images/cabecera.png" class="pull-left" alt="imagen con nombre de la cabecera"  />' + 
-        '<div class="nav nav-pills pull-right" style="padding-top: 1rem">' + 
-            '<h3 id = "nombreUsuario"></h3>' +
-            '<button type="submit" class="btn btn-danger"><i class="fa fa-sign-out"></i> Desconectar</button>'+
-        '</div></header>';
-    $("body").append("<div>").addClass("container");
-    $(".container").append(cabecera);
+    '<div class = "container">'+
+        '<header class="page-header">'+
+            '<div class="row" >'+
+                '<div class = "col-md-7">' + 
+                    '<img src="images/cabecera.png" class="pull-left" alt="imagen con nombre de la cabecera"  />' +
+                '</div>'+ 
+                '<div class = "col-md-3" >' + 
+                    '<h2 id = "nombreUsuario"></h2>' +
+                '</div>'+
+                '<div class = "col-md-2" style="padding-top: 2rem">' + 
+                    '<button type="submit" class="btn btn-danger"><i class="fa fa-sign-out"></i> Desconectar</button>'+
+                '</div>'+
+            '</div>'+
+        '</header>'+
+    '</div>';
+    $("body").append(cabecera);
     $("#nombreUsuario").text(user);
     $("#nombreUsuario").css("paddingRight","1rem");
     $("button.btn.btn-danger").on("click", desconectar);
@@ -56,13 +64,13 @@ function header(user){
 
 function pestañas(){
     let menuPestañas = 
-    '<div>'+ 
-       '<ul class="nav nav-tabs">'+
-            '<li class="active"><a href="#">Inicio</a></li>'+
-            '<li><a href="#">Perfil</a></li>'+
-            '<li><a href="#">Mensajes</a></li>'+
-        '</ul>'
-    '</div>';
+    '<div class="row"><div class = "col-sm-12">'+ 
+        '<ul class="nav nav-tabs">'+
+            '<li class="active"><a href="#">Mis partidas</a></li>'+
+            '<li><a href="#">Partida amiguetes</a></li>'+
+            '<li><a href="#">Familiar</a></li>'+
+        '</ul>'+
+    '</div></div>';
     $(".container").append(menuPestañas);
 };
 

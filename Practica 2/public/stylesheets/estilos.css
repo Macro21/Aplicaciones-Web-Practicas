@@ -3,7 +3,7 @@ body{
 }
 .input-group{
     padding-top: 1rem;
-    max-width:40%;
+    width: 40%;
 }
 .centrar{
     display: flex;
