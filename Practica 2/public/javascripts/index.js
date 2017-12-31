@@ -66,12 +66,26 @@ function pestañas(){
     let menuPestañas = 
     '<div class="row"><div class = "col-sm-12">'+ 
         '<ul class="nav nav-tabs">'+
-            '<li class="active"><a href="#">Mis partidas</a></li>'+
-            '<li><a href="#">Partida amiguetes</a></li>'+
-            '<li><a href="#">Familiar</a></li>'+
+            '<li class="active"><a onClick="pestañaMisPartidas();">Mis partidas</a></li>'+
+            '<li><a onClick="pestañaAmiguetes();">Partida amiguetes</a></li>'+
+            '<li><a onClick="pestañaFamiliar();">Familiar</a></li>'+
         '</ul>'+
     '</div></div>';
     $(".container").append(menuPestañas);
+};
+
+function pestañaMisPartidas(){
+    if($(".nav-tabs li").hasClass(".active")){
+        alert("peeeeeeepe");
+    }
+};
+
+function pestañaAmiguetes(){
+
+};
+
+function pestañaFamiliar(){
+
 };
 
 function desconectar(event){
