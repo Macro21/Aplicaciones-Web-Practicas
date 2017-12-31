@@ -1,0 +1,16 @@
+body{
+    background-color: brown;
+}
+.input-group{
+    padding-top: 1rem;
+    max-width:40%;
+}
+.centrar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#portada{
+    padding-top: 2rem;
+}
