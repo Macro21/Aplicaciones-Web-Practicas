@@ -5,6 +5,9 @@ body{
     padding-top: 1rem;
     width: 40%;
 }
+#pestañaAct .input-group{
+    width: 60%;
+}
 .centrar{
     display: flex;
     flex-direction: column;
@@ -12,5 +15,10 @@ body{
     align-items: center; 
 }
 #portada{
-    padding-top: 2rem;
+    padding-top: 3rem;
+}
+
+#subImagenPortada,#titulo{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }

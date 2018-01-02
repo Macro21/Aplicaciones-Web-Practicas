@@ -17,7 +17,7 @@
 <body>
     <div id = "portada">
         <div class = "text-center">
-            <img src="images/textoInicio.png" alt="titulo">
+            <img id="titulo" src="images/textoInicio.png" alt="titulo">
         </div>
         <div class = "text-center">
             <img src="images/K_H.png" alt="foto monton cartas">
@@ -26,7 +26,80 @@
             <img src="images/K_C.png" alt="foto monton cartas">
             <img src="images/A_C.png" alt="foto monton cartas">
         </div>
-        <div class="container" ></div>
+        <div class="container" >
+            <div class="text-center">
+                <img id = "subImagenPortada" src="images/iniciarSesion.png" alt="foto iniciar sesion o registro">
+                <div class="centrar">
+                    <div class="input-group">
+                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
+                        <input type="text" name="email" class="form-control" id="email" placeholder="Introduce tu correo" required autofocus>
+                    </div>
+                    <div class="input-group" >
+                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Introduce la contraseña" required>
+                    </div>
+                    <div id = "botones" style="padding-top: 1rem" >
+                        <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Conectar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus"></i> Registrarse</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pestañas">
+        <div class = "container">
+            <header class="page-header">
+                <div class="row" >
+                    <div class = "col-md-7"> 
+                        <img src="images/cabecera.png" class="pull-left" alt="imagen con nombre de la cabecera"  />
+                    </div>
+                    <div class = "col-md-3" >
+                        <h2 id = "nombreUsuario"></h2>
+                    </div>
+                    <div class = "col-md-2" style="padding-top: 2rem">
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-sign-out"></i> Desconectar</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="row">
+                <div class = "col-sm-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a onClick="pestañaMisPartidas();">Mis partidas</a></li>
+                        <li ><a onClick="pestañaAmiguetes();">Partida amiguetes</a></li>
+                        <li ><a onClick="pestañaFamiliar();">Familiar</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id ="pestañaAct">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Crear una nueva partida</div>
+                        <div class="panel-body centrar">
+                            <div class="input-group">
+                                <input id="cp" type="text" class="form-control" value = 'Introduce aquí el nombre'  onfocus="if (this.value == 'Introduce aquí el nombre') this.value='';" onblur="if (this.value=='') this.value='Introduce aquí el nombre';" >
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" onClick="crearPartida()";>Crear</button>
+                                </span>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">Unirse a una partida existente</div>
+                    <div class="panel-body centrar">
+                        <div class="input-group">
+                            <input id = "up" type="text" class="form-control" value = 'Introduce el identificador de la partida'  onfocus="if (this.value == 'Introduce el identificador de la partida') this.value='';" onblur="if (this.value=='') this.value='Introduce el identificador de la partida';" >
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onClick="unirsePartida()";>Unirse</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </body>
 
