@@ -67,25 +67,69 @@ function pestañas(){
     '<div class="row"><div class = "col-sm-12">'+ 
         '<ul class="nav nav-tabs">'+
             '<li class="active"><a onClick="pestañaMisPartidas();">Mis partidas</a></li>'+
-            '<li><a onClick="pestañaAmiguetes();">Partida amiguetes</a></li>'+
-            '<li><a onClick="pestañaFamiliar();">Familiar</a></li>'+
+            '<li ><a onClick="pestañaAmiguetes();">Partida amiguetes</a></li>'+
+            '<li ><a onClick="pestañaFamiliar();">Familiar</a></li>'+
         '</ul>'+
     '</div></div>';
     $(".container").append(menuPestañas);
+    let pestañaAct = $("<div>").attr("id","pestañaAct");
+    $(".container").append(pestañaAct);
+    pestañaMisPartidas();
 };
 
 function pestañaMisPartidas(){
-    if($(".nav-tabs li").hasClass(".active")){
-        alert("peeeeeeepe");
+    activarPestañaPulsada();
+    let pestañaActVacia = $('#pestañaAct').is(':empty');
+    if(pestañaActVacia){
+        let crearPartida =   
+            '<div class="panel panel-info">'+
+                '<div class="panel-heading">Crear una nueva partida</div>'+
+                '<div class="panel-body centrar">'+
+                    '<div class="input-group">'+
+                        '<input type="text" class="form-control" value = \'Introduce aquí el nombre\'  onfocus="if (this.value == \'Introduce aquí el nombre\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce aquí el nombre\';" >'+
+                        '<span class="input-group-btn">'+
+                            '<button class="btn btn-default" type="button">Crear</button>'+
+                        '</span>'+
+                    '</div>'+
+                '</div>';
+        let unirsePartida = 
+        '<div class="panel panel-info">'+
+            '<div class="panel-heading">Unirse a una partida existente</div>'+
+            '<div class="panel-body centrar">'+
+                '<div class="input-group">'+
+                    '<input type="text" class="form-control" value = \'Introduce el identificador de la partida\'  onfocus="if (this.value == \'Introduce el identificador de la partida\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce el identificador de la partida\';" >'+
+                    '<span class="input-group-btn">'+
+                        '<button class="btn btn-default" type="button">Unirse</button>'+
+                    '</span>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+        $("#pestañaAct").append(crearPartida);
+        $("#pestañaAct").append(unirsePartida);
+        $(".input-group").css("width","60%");
     }
 };
 
 function pestañaAmiguetes(){
-
+    activarPestañaPulsada();
+    $("#pestañaAct").empty();
 };
 
 function pestañaFamiliar(){
+    activarPestañaPulsada();
+    $("#pestañaAct").empty();
+};
 
+function activarPestañaPulsada(){
+
+    let lista = document.getElementsByClassName("nav-tabs");
+    let elems = $(lista).children();
+    for (let i = 0; i <elems.length; i++) {
+        elems[i].addEventListener("click", function(){
+            $(".nav-tabs li").removeClass("active");
+            this.className += " active";
+        });
+    }
 };
 
 function desconectar(event){
@@ -120,5 +164,5 @@ function crearNuevoUsuario(event){
             alert("Se ha producido un error: " + errorThrown);
         }
     });
-}
+};
 

@@ -33,8 +33,8 @@ function funCallback(user, pass, callback) {
 
     daoUser.isUserCorrect(user,pass,(err,correctPassword)=>{
         if(err){
-            response.status(500);//internal server error
-            response.end(err.message);
+           // response.status(500);//internal server error
+           // response.end(err.message);
             console.log(err);
         }
         if(correctPassword){//en realidad comprueba que el usuario exista y que tenga esa contraseña
