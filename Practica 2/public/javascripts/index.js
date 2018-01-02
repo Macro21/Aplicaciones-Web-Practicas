@@ -5,10 +5,7 @@
  */
 $(() => {
     $("#pestañas").hide();
-    // Cuando se pulse el boton de 'Conectar' se llama a la función iniciarSesion
-    $("#botones").on("click", "button.btn.btn-success", iniciarSesion);
-     // Cuando se pulse el botón de 'Registrarse', se llamará a la función nuevoUsuario
-     $("#botones").on("click", "button.btn.btn-primary", nuevoUsuario);
+    $("#crearUsuario").hide();
 });
 
 
@@ -37,19 +34,12 @@ function iniciarSesion(event) {
 function mostrarPanelPrincipal(user){
     $("#portada").hide();
     $("#pestañas").show();
-    header(user);
-    $(".nav-tabs li a").css("color","orange");
-};
-
-function header(user){
     $("#nombreUsuario").text(user);
-    $("#nombreUsuario").css("paddingRight","1rem");
-    $("#nombreUsuario").css("color","orange");
-    $("button.btn.btn-danger").on("click", desconectar);
 };
 
 function pestañaMisPartidas(){
     activarPestañaPulsada();
+    $("#pestañaPartidas").show();
 };
 
 function crearPartida(){
@@ -67,18 +57,28 @@ function crearPartida(){
             alert("Se ha producido un error al crear partida: " + errorThrown);
         }
     });
-    $.ajax({
+
+  /*  $.ajax({//Acceso a las partidas en las que participa un usuario.
         method: "GET",
-        url: "/games",
-        contentType: "application/json",
-        data: JSON.stringify({id : 14}),
+        url: "/gameState/" + 1,
         success: (data,status,jqXHR)=>{
             alert(data);
         },
         error: (jqXHR,status,errorThrown)=>{
             alert("Se ha producido un error l: " + errorThrown);
         }
-    });
+    });*/
+
+    /*$.ajax({//Estado de una partida.
+        method: "GET",
+        url: "/games/" + 14,
+        success: (data,status,jqXHR)=>{
+            alert(data);
+        },
+        error: (jqXHR,status,errorThrown)=>{
+            alert("Se ha producido un error l: " + errorThrown);
+        }
+    });*/
 };
 
 function unirsePartida(){
@@ -87,16 +87,15 @@ function unirsePartida(){
 
 function pestañaAmiguetes(){
     activarPestañaPulsada();
-    $("#pestañaAct").empty();
+    $("#pestañaPartidas").hide();
 };
 
 function pestañaFamiliar(){
     activarPestañaPulsada();
-    $("#pestañaAct").empty();
+    $("#pestañaPartidas").hide();
 };
 
 function activarPestañaPulsada(){
-
     let lista = document.getElementsByClassName("nav-tabs");
     let elems = $(lista).children();
     for (let i = 0; i <elems.length; i++) {
@@ -123,11 +122,9 @@ function desconectar(event){
 };
 
 function nuevoUsuario(event) {
-    let botonCrearUsuario = '<button type="submit" class="btn btn-default"><i class="fa fa-user-plus"></i> Crear Usuario</button>';
-    $("#botones").empty();
-    $("#botones").append(botonCrearUsuario);
+    $("#botones").hide();
+    $("#crearUsuario").show();
     $("#subImagenPortada").attr("src","images/crearUsuario.png");
-    $("#botones").on("click", "button.btn.btn-default", crearNuevoUsuario);
 };
 
 function crearNuevoUsuario(event){

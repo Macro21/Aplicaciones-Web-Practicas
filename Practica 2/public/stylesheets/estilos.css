@@ -5,7 +5,12 @@ body{
     padding-top: 1rem;
     width: 40%;
 }
-#pestañaAct .input-group{
+
+.input-group-addon{
+    width: 2.6rem;
+}
+
+#pestañaPartidas .input-group{
     width: 60%;
 }
 .centrar{
@@ -18,7 +23,14 @@ body{
     padding-top: 3rem;
 }
 
-#subImagenPortada,#titulo{
+#subImagenPortada,#titulo,#botones,#crearUsuario,#pestañaPartidas{
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+
+.nav-tabs li a, #nombreUsuario{
+    color:orange;
+}
+#nombreUsuario{
+    padding-right: 1rem;
 }

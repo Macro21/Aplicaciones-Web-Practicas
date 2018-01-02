@@ -136,6 +136,75 @@ class DAOUsers {
             );
         });
     };
+    getGameState(gameId,callback){
+        this.pool.getConnection((err,connection)=>{
+            if(err){
+                console.log(err);
+                callback(err);
+                return;
+            }
+            connection.query(
+                "select login from usuarios where id in (Select idUsuario from juega_en where idPartida = ?)",
+                [gameId],
+                (err,rows) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                    }
+                    callback(null, rows);
+                    connection.release();
+                }
+            );
+        });
+    };
+
+    insertGame(nombrePartida, callback){
+        this.pool.getConnection((err,connection) => {
+            if(err){
+                callback(err);
+                connection.release();
+                return;
+            }
+            connection.query(
+                "insert into partidas(nombre) values (?)",
+                [nombrePartida],
+                (err,row) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                    }
+                    else{
+                        callback(null,row.insertId);
+                    }
+                }
+            );
+            connection.release();
+        });
+    };
+
+    insertPlayerInGame(userId,gameId,callback){
+        this.pool.getConnection((err,connection) => {
+            if(err){
+                callback(err);
+                connection.release();
+                return;
+            }
+            connection.query(
+                "insert into juega_en(idUsuario,idPartida) values (?,?)",
+                [userId,gameId],
+                (err,row) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                    }
+                    else{
+                        callback(null);
+                    }
+                }
+            );
+            connection.release();
+        });
+    };
 
 
 }

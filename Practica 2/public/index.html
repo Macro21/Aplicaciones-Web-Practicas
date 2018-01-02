@@ -31,16 +31,19 @@
                 <img id = "subImagenPortada" src="images/iniciarSesion.png" alt="foto iniciar sesion o registro">
                 <div class="centrar">
                     <div class="input-group">
-                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>
+                        <div class="input-group-addon"><i class="fa fa-at"></i></div>
                         <input type="text" name="email" class="form-control" id="email" placeholder="Introduce tu correo" required autofocus>
                     </div>
                     <div class="input-group" >
-                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+                        <div class="input-group-addon" ><i class="fa fa-key"></i></div>
                         <input type="password" name="password" class="form-control" id="password" placeholder="Introduce la contraseña" required>
                     </div>
-                    <div id = "botones" style="padding-top: 1rem" >
-                        <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Conectar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus"></i> Registrarse</button>
+                    <div id = "botones" >
+                        <button type="submit" class="btn btn-success" onclick="iniciarSesion()";><i class="fa fa-sign-in"></i> Conectar</button>
+                        <button type="submit" class="btn btn-primary" onclick="nuevoUsuario()";><i class="fa fa-user-plus"></i> Registrarse</button>
+                    </div>
+                    <div id = "crearUsuario" >
+                        <button type="submit" class="btn btn-default" onclick="crearNuevoUsuario()";><i class="fa fa-user-plus"></i> Crear Usuario</button>
                     </div>
                 </div>
             </div>
@@ -58,7 +61,7 @@
                         <h2 id = "nombreUsuario"></h2>
                     </div>
                     <div class = "col-md-2" style="padding-top: 2rem">
-                        <button type="submit" class="btn btn-danger"><i class="fa fa-sign-out"></i> Desconectar</button>
+                        <button type="submit" class="btn btn-danger" onclick="desconectar()";><i class="fa fa-sign-out"></i> Desconectar</button>
                     </div>
                 </div>
             </header>
@@ -73,7 +76,7 @@
                 </div>
             </div>
 
-            <div id ="pestañaAct">
+            <div id ="pestañaPartidas">
                 <div class="panel panel-info">
                     <div class="panel-heading">Crear una nueva partida</div>
                         <div class="panel-body centrar">

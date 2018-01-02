@@ -80,17 +80,47 @@ app.post("/newUser", (request, response) => {
     });
 });
 
-app.post("/newGame", (request,response)=>{
-    let nombrePartida = request.body.nombrePartida;
-});
-
-app.get("/games",passport.authenticate('basic', {session: false}),(request,response)=>{
-    daoUser.getGamesByUser(request.user.id, (err,result)=>{
+app.get("/games/:id",passport.authenticate('basic', {session: false}),(request,response)=>{
+    daoUser.getGamesByUser(request.params.id, (err,result)=>{
         if(err){
             response.status(500);
         }
         response.status(200);
         response.json({result});
+    });
+});
+
+app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
+    daoUser.getGameState(request.params.gameId,(err,result)=>{
+        if(err){
+            response.status(500);
+            console.log(err);
+        }
+        if(result.lenght === 0){
+            response.status(404);//Not found
+        }
+        else{
+            response.status(200);
+            response.json(result);
+        }
+    });
+});
+
+app.post("/newGame", passport.authenticate('basic', {session: false}), (request,response)=>{
+    let nombrePartida = request.body.nombrePartida;
+    daoUser.insertGame(nombrePartida,(err,gameId)=>{
+        if(err){
+            console.log(err);
+            response.status(500);
+        }
+        daoUser.insertPlayerInGame(request.user.id, gameId, (err)=>{
+            if(err){
+                console.log(err);
+                response.status(500);
+            }
+            response.status(201);
+            response.json({});
+        });
     });
 });
 
