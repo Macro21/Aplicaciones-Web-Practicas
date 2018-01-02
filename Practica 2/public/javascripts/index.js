@@ -4,12 +4,35 @@
  * Manejador que se ejecuta cuando el DOM se haya cargado.
  */
 $(() => {
+    mostrarIniciarSesion();
+});
+
+function mostrarIniciarSesion(){
+    let inicioSesion = 
+    '<div class="text-center">'+
+        '<img id = "subImagenPortada" src="images/iniciarSesion.png" alt="foto iniciar sesion o registro">'+
+        '<div class="centrar">'+
+            '<div class="input-group">'+
+                '<div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-at"></i></div>'+
+                '<input type="text" name="email" class="form-control" id="email" placeholder="Introduce tu correo" required autofocus>'+
+            '</div>'+
+            '<div class="input-group" >'+
+                '<div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>'+
+                '<input type="password" name="password" class="form-control" id="password" placeholder="Introduce la contraseña" required>'+
+            '</div>'+
+            '<div id = "botones" style="padding-top: 1rem" >'+
+                '<button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Conectar</button>'+
+                '<button type="submit" class="btn btn-primary"><i class="fa fa-user-plus"></i> Registrarse</button>'+
+            '</div>'+
+        '</div>  '+
+    '</div>';
+    $(".container").append(inicioSesion);
+    $(".container").css("paddingTop","3rem");
     // Cuando se pulse el boton de 'Conectar' se llama a la función iniciarSesion
     $("#botones").on("click", "button.btn.btn-success", iniciarSesion);
-
-    // Cuando se pulse el botón de 'Registrarse', se llamará a la función nuevoUsuario
-    $("#botones").on("click", "button.btn.btn-primary", nuevoUsuario);
-});
+     // Cuando se pulse el botón de 'Registrarse', se llamará a la función nuevoUsuario
+     $("#botones").on("click", "button.btn.btn-primary", nuevoUsuario);
+}
 
 function iniciarSesion(event) {
     let user = $("#email").prop("value");
@@ -34,7 +57,7 @@ function iniciarSesion(event) {
 };
 
 function mostrarPanelPrincipal(user){
-    $("#portada").remove();
+    $("#portada").hide();
     header(user);
     pestañas();
 };
@@ -56,9 +79,12 @@ function header(user){
             '</div>'+
         '</header>'+
     '</div>';
+    $(".container").remove();
     $("body").append(cabecera);
+    $(".container").css("paddingTop","3rem");
     $("#nombreUsuario").text(user);
     $("#nombreUsuario").css("paddingRight","1rem");
+    $("#nombreUsuario").css("color","orange");
     $("button.btn.btn-danger").on("click", desconectar);
 };
 
@@ -72,6 +98,7 @@ function pestañas(){
         '</ul>'+
     '</div></div>';
     $(".container").append(menuPestañas);
+    $(".nav-tabs li a").css("color","orange");
     let pestañaAct = $("<div>").attr("id","pestañaAct");
     $(".container").append(pestañaAct);
     pestañaMisPartidas();
@@ -107,6 +134,7 @@ function pestañaMisPartidas(){
         $("#pestañaAct").append(crearPartida);
         $("#pestañaAct").append(unirsePartida);
         $(".input-group").css("width","60%");
+        $("#pestañaAct").css("paddingTop","2rem");
     }
 };
 
@@ -133,7 +161,18 @@ function activarPestañaPulsada(){
 };
 
 function desconectar(event){
-    console.log("desconectar");
+    $.ajax({
+        method: "GET",
+        url: "/logout",
+        success: (data,status,jqXHR)=>{
+            $("#portada").show();
+            $(".container").empty();
+            mostrarIniciarSesion();
+        },
+        error: (jqXHR,status,errorThrown) =>{
+            alert("Ha ocurrido un error" + errorThrown);
+        }
+    });
 };
 
 function nuevoUsuario(event) {

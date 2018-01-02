@@ -53,10 +53,6 @@ app.get("/protegido",passport.authenticate('basic', {session: false}), (request,
     response.json({permitido: true});
 });
 
-app.get("/",(request,response)=>{
-    response.redirect("index.html");
-});
-
 app.post("/newUser", (request, response) => {
     let login = request.body.newUser.user;
     let pass = request.body.newUser.password;
@@ -82,6 +78,12 @@ app.post("/newUser", (request, response) => {
         }
     });
 });
+
+app.get("/logout",(request,response)=>{
+    request.logout();
+    response.json({});
+});
+
 
 app.listen(config.port, function(err) {
     if (err) {
