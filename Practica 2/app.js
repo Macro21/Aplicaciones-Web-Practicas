@@ -124,6 +124,10 @@ app.post("/newGame", passport.authenticate('basic', {session: false}), (request,
     });
 });
 
+app.post("/joinGame/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
+    
+});
+
 app.get("/logout",(request,response)=>{
     request.logout();
     response.json({});
