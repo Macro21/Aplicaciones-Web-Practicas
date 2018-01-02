@@ -41,7 +41,7 @@ function iniciarSesion(event) {
     let cadenaBase64 = btoa(user + ":" + password);
     $.ajax({
         method: "GET",
-        url: "/protegido",
+        url: "/login",
         beforeSend: (req)=> {
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
@@ -113,9 +113,9 @@ function pestañaMisPartidas(){
                 '<div class="panel-heading">Crear una nueva partida</div>'+
                 '<div class="panel-body centrar">'+
                     '<div class="input-group">'+
-                        '<input type="text" class="form-control" value = \'Introduce aquí el nombre\'  onfocus="if (this.value == \'Introduce aquí el nombre\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce aquí el nombre\';" >'+
+                        '<input id="cp" type="text" class="form-control" value = \'Introduce aquí el nombre\'  onfocus="if (this.value == \'Introduce aquí el nombre\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce aquí el nombre\';" >'+
                         '<span class="input-group-btn">'+
-                            '<button class="btn btn-default" type="button">Crear</button>'+
+                            '<button class="btn btn-default" type="button" onClick="crearPartida()";>Crear</button>'+
                         '</span>'+
                     '</div>'+
                 '</div>';
@@ -124,9 +124,9 @@ function pestañaMisPartidas(){
             '<div class="panel-heading">Unirse a una partida existente</div>'+
             '<div class="panel-body centrar">'+
                 '<div class="input-group">'+
-                    '<input type="text" class="form-control" value = \'Introduce el identificador de la partida\'  onfocus="if (this.value == \'Introduce el identificador de la partida\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce el identificador de la partida\';" >'+
+                    '<input id = "up" type="text" class="form-control" value = \'Introduce el identificador de la partida\'  onfocus="if (this.value == \'Introduce el identificador de la partida\') this.value=\'\';" onblur="if (this.value==\'\') this.value=\'Introduce el identificador de la partida\';" >'+
                     '<span class="input-group-btn">'+
-                        '<button class="btn btn-default" type="button">Unirse</button>'+
+                        '<button class="btn btn-default" type="button" onClick="unirsePartida()";>Unirse</button>'+
                     '</span>'+
                 '</div>'+
             '</div>'+
@@ -135,7 +135,41 @@ function pestañaMisPartidas(){
         $("#pestañaAct").append(unirsePartida);
         $(".input-group").css("width","60%");
         $("#pestañaAct").css("paddingTop","2rem");
+        $("#botones").on("click", "button.btn.btn-success", iniciarSesion);
     }
+};
+
+function crearPartida(){
+    let nombrePartida = $("#cp").prop("value")
+    $.ajax({
+        method: "POST",
+        url: "/newGame",
+        contentType: "application/json",
+        data: JSON.stringify({nombrePartida}),
+        success: (data,status,jqXHR)=>{
+            alert("Correcto!");
+            //redirigir
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error al crear partida: " + errorThrown);
+        }
+    });
+    $.ajax({
+        method: "GET",
+        url: "/games",
+        contentType: "application/json",
+        data: JSON.stringify({id : 14}),
+        success: (data,status,jqXHR)=>{
+            alert(data);
+        },
+        error: (jqXHR,status,errorThrown)=>{
+            alert("Se ha producido un error l: " + errorThrown);
+        }
+    });
+};
+
+function unirsePartida(){
+    alert("unirse");
 };
 
 function pestañaAmiguetes(){

@@ -1,4 +1,5 @@
 
+
 "use strict";
 
 const express = require("express");
@@ -38,7 +39,7 @@ function funCallback(user, pass, callback) {
             console.log(err);
         }
         if(correctPassword){//en realidad comprueba que el usuario exista y que tenga esa contraseña
-            callback(null, { userId: correctPassword.id });
+            callback(null, { id: correctPassword.id });
         }
         else{
             callback(null, false);
@@ -49,7 +50,7 @@ function funCallback(user, pass, callback) {
 var miEstrategia =new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' }, funCallback);
 passport.use(miEstrategia);
 
-app.get("/protegido",passport.authenticate('basic', {session: false}), (request, response)=> {
+app.get("/login",passport.authenticate('basic', {session: false}), (request, response)=> {
     response.json({permitido: true});
 });
 
@@ -76,6 +77,20 @@ app.post("/newUser", (request, response) => {
                 response.json({});
             });
         }
+    });
+});
+
+app.post("/newGame", (request,response)=>{
+    let nombrePartida = request.body.nombrePartida;
+});
+
+app.get("/games",passport.authenticate('basic', {session: false}),(request,response)=>{
+    daoUser.getGamesByUser(request.user.id, (err,result)=>{
+        if(err){
+            response.status(500);
+        }
+        response.status(200);
+        response.json({result});
     });
 });
 

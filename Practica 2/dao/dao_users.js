@@ -116,6 +116,26 @@ class DAOUsers {
         });
     };
 
+    getGamesByUser(userId, callback){
+        this.pool.getConnection((err,connection)=>{
+            if(err){
+                callback(err);
+                return;
+            }
+            connection.query(
+                "select id, nombre from partidas where id in (Select idPartida from juega_en where idUsuario = ?)",
+                [userId],
+                (err,rows) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                    }
+                    callback(null, rows);
+                    connection.release();
+                }
+            );
+        });
+    };
 
 
 }
