@@ -16,7 +16,7 @@ function iniciarSesion(event) {
     let cadenaBase64 = btoa(user + ":" + password);
     $.ajax({
         method: "GET",
-        url: "/login",
+        url: "/protegido",
         beforeSend: (req)=> {//quitar no hace falta aqui
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);

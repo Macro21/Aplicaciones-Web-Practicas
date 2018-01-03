@@ -52,9 +52,10 @@ function funCallback(user, pass, callback) {
 var miEstrategia =new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' }, funCallback);
 passport.use(miEstrategia);
 
-app.get("/login",passport.authenticate('basic', {session: false}), (request, response)=> {
+app.get("/protegido",passport.authenticate('basic', {session: false}), (request, response)=> {
     response.json({permitido: true});
 });
+
 
 app.post("/newUser", (request, response) => {
     let login = request.body.newUser.user;
