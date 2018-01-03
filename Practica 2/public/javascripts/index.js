@@ -17,7 +17,7 @@ function iniciarSesion(event) {
     $.ajax({
         method: "GET",
         url: "/login",
-        beforeSend: (req)=> {
+        beforeSend: (req)=> {//quitar no hace falta aqui
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
@@ -43,12 +43,20 @@ function pestañaMisPartidas(){
 };
 
 function crearPartida(){
-    let nombrePartida = $("#cp").prop("value")
+    let nombrePartida = $("#cp").prop("value");
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+
     $.ajax({
         method: "POST",
         url: "/newGame",
         contentType: "application/json",
         data: JSON.stringify({nombrePartida}),
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
         success: (data,status,jqXHR)=>{
             alert("Correcto!");
             //redirigir
@@ -57,6 +65,26 @@ function crearPartida(){
             alert("Se ha producido un error al crear partida: " + errorThrown);
         }
     });
+
+  /*  let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+
+    $.ajax({//Incorporación a una partida. 
+        method: "POST",
+        url: "/joinGame",
+        contentType: "application/json",
+        data: JSON.stringify({gameId: 9}),
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data, status, jqXHR) =>{
+            alert("ENTRADA EN PARTIDA CORRECTO");
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Error en entrar a la partida" + errorThrown);
+        }
+    });*/
 
   /*  $.ajax({//Acceso a las partidas en las que participa un usuario.
         method: "GET",
@@ -107,9 +135,16 @@ function activarPestañaPulsada(){
 };
 
 function desconectar(event){
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
     $.ajax({
         method: "GET",
         url: "/logout",
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
         success: (data,status,jqXHR)=>{
             $("#portada").show();
             $("#pestañas").hide();

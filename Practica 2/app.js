@@ -12,7 +12,8 @@ const passportHTTP = require("passport-http");
 
 const app = express();
 
-const daoUsers = require("./dao/dao_users");
+const daoUsuarios = require("./dao/dao_usuarios");
+const daoPartidas = require("./dao/dao_partidas");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -28,11 +29,12 @@ const pool = mysql.createPool({
     database: config.mysqlConfig.database
 });
 
-const daoUser = new daoUsers.DAOUsers(pool);
+const daoUsuario = new daoUsuarios.DAOUsuarios(pool);
+const daoPartida = new daoPartidas.DAOPartidas(pool);
 
 function funCallback(user, pass, callback) {
 
-    daoUser.isUserCorrect(user,pass,(err,correctPassword)=>{
+    daoUsuario.isUserCorrect(user,pass,(err,correctPassword)=>{
         if(err){
            // response.status(500);//internal server error
            // response.end(err.message);
@@ -58,7 +60,7 @@ app.post("/newUser", (request, response) => {
     let login = request.body.newUser.user;
     let pass = request.body.newUser.password;
 
-    daoUser.existsUser(login, (err,exist)=>{
+    daoUsuario.existsUser(login, (err,exist)=>{
         if(err){
             response.status(500);
             console.log(err);
@@ -68,7 +70,7 @@ app.post("/newUser", (request, response) => {
             response.json({});
         }
         else{
-            daoUser.insertUser(login,pass, (err)=>{
+            daoUsuario.insertUser(login,pass, (err)=>{
                 if(err){
                     response.status(500);//internal server error
                     response.json({});
@@ -81,7 +83,8 @@ app.post("/newUser", (request, response) => {
 });
 
 app.get("/games/:id",passport.authenticate('basic', {session: false}),(request,response)=>{
-    daoUser.getGamesByUser(request.params.id, (err,result)=>{
+    
+    daoUsuario.getGamesByUser(request.params.id, (err,result)=>{
         if(err){
             response.status(500);
         }
@@ -91,12 +94,13 @@ app.get("/games/:id",passport.authenticate('basic', {session: false}),(request,r
 });
 
 app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
-    daoUser.getGameState(request.params.gameId,(err,result)=>{
+    
+    daoPartida.getPlayersInGame(request.params.gameId,(err,result)=>{
         if(err){
             response.status(500);
             console.log(err);
         }
-        if(result.lenght === 0){
+        if(result.length === 0){
             response.status(404);//Not found
         }
         else{
@@ -108,12 +112,12 @@ app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(r
 
 app.post("/newGame", passport.authenticate('basic', {session: false}), (request,response)=>{
     let nombrePartida = request.body.nombrePartida;
-    daoUser.insertGame(nombrePartida,(err,gameId)=>{
+    daoPartida.insertGame(nombrePartida,(err,gameId)=>{
         if(err){
             console.log(err);
             response.status(500);
         }
-        daoUser.insertPlayerInGame(request.user.id, gameId, (err)=>{
+        daoUsuario.insertPlayerInGame(request.user.id, gameId, (err)=>{
             if(err){
                 console.log(err);
                 response.status(500);
@@ -124,8 +128,38 @@ app.post("/newGame", passport.authenticate('basic', {session: false}), (request,
     });
 });
 
-app.post("/joinGame/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
-    
+//Incorporación a una partida.
+app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,response)=>{
+
+    daoPartida.getGame(request.body.gameId,(err,result)=>{
+        if(err){
+            console.log(err);
+            response.status(500);
+        }
+        if(result.length === 0){//si no existe la partida
+            response.status(404);
+        }
+        else{
+            daoPartida.getPlayersInGame(request.body.gameId, (err,resultPlayersInGame)=>{
+                
+                if(err){
+                    response.status(500);
+                    console.log(err);
+                }
+                if(resultPlayersInGame.length === 4){
+                    response.status(400);
+                }
+                //si existe la partida y no se ha completado
+                daoUsuario.insertPlayerInGame(request.user.id,request.body.gameId,(err)=>{
+                    if(err){
+                        response.status(500);
+                        console.log(err);
+                    }
+                    response.status(200);
+                });
+            });
+        }
+    });
 });
 
 app.get("/logout",(request,response)=>{
