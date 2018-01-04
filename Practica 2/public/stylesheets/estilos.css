@@ -23,7 +23,7 @@ body{
     padding-top: 3rem;
 }
 
-#subImagenPortada,#titulo,#botones,#crearUsuario,#pestañaPartidas{
+#subImagenPortada,#titulo,#botones,#crearUsuario,#pestañaPartidas, #pestañaAmiguetes{
     padding-top: 1rem;
     padding-bottom: 1rem;
 }

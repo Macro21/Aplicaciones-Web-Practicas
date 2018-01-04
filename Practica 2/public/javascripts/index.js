@@ -8,12 +8,12 @@ $(() => {
     $("#crearUsuario").hide();
 });
 
-
 function iniciarSesion(event) {
+
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
-
     let cadenaBase64 = btoa(user + ":" + password);
+
     $.ajax({
         method: "GET",
         url: "/protegido",
@@ -34,11 +34,14 @@ function iniciarSesion(event) {
 function mostrarPanelPrincipal(user){
     $("#portada").hide();
     $("#pestañas").show();
+    $("#pestañaAmiguetes").hide();
     $("#nombreUsuario").text(user);
 };
 
 function pestañaMisPartidas(){
     activarPestañaPulsada();
+    $("#pestañaAmiguetes").hide();
+    //$("#pestañaFamilia").hide();
     $("#pestañaPartidas").show();
 };
 
@@ -66,26 +69,6 @@ function crearPartida(){
         }
     });
 
-  /*  let user = $("#email").prop("value");
-    let password = $("#password").prop("value");
-
-    $.ajax({//Incorporación a una partida. 
-        method: "POST",
-        url: "/joinGame",
-        contentType: "application/json",
-        data: JSON.stringify({gameId: 9}),
-        beforeSend: (req)=> {
-            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
-            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
-        },
-        success: (data, status, jqXHR) =>{
-            alert("ENTRADA EN PARTIDA CORRECTO");
-        },
-        error: (jqXHR, status, errorThrown)=>{
-            alert("Error en entrar a la partida" + errorThrown);
-        }
-    });*/
-
   /*  $.ajax({//Acceso a las partidas en las que participa un usuario.
         method: "GET",
         url: "/gameState/" + 1,
@@ -110,12 +93,34 @@ function crearPartida(){
 };
 
 function unirsePartida(){
-    alert("unirse");
+
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+    let gameId = $("#up").prop("value"); 
+
+    $.ajax({//Incorporación a una partida. 
+        method: "POST",
+        url: "/joinGame",
+        contentType: "application/json",
+        data: JSON.stringify({gameId: gameId}),
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data, status, jqXHR) =>{
+            alert("ENTRADA EN PARTIDA CORRECTO");
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Error en entrar a la partida" + errorThrown);
+        }
+    });
 };
 
 function pestañaAmiguetes(){
     activarPestañaPulsada();
     $("#pestañaPartidas").hide();
+    $("#pestañaAmiguetes").show();
 };
 
 function pestañaFamiliar(){
@@ -165,6 +170,7 @@ function nuevoUsuario(event) {
 function crearNuevoUsuario(event){
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
+    
     let newUser = {
         user: user,
         password: password

@@ -142,7 +142,6 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
         }
         else{
             daoPartida.getPlayersInGame(request.body.gameId, (err,resultPlayersInGame)=>{
-                
                 if(err){
                     response.status(500);
                     console.log(err);
@@ -157,6 +156,7 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
                         console.log(err);
                     }
                     response.status(200);
+                    response.json({});
                 });
             });
         }
