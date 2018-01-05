@@ -17,18 +17,15 @@
 <body>
     <div id = "portada">
         <div class = "text-center">
-            <img id="titulo" src="images/textoInicio.png" alt="titulo">
+            <img id="titulo" width="50%" src="images/textoInicio2.png" alt="titulo">
         </div>
         <div class = "text-center">
-            <img src="images/K_H.png" alt="foto monton cartas">
-            <img src="images/A_D.png" alt="foto monton cartas">
-            <img src="images/A_H.png" alt="foto monton cartas">
-            <img src="images/K_C.png" alt="foto monton cartas">
-            <img src="images/A_C.png" alt="foto monton cartas">
+            <img src="images/portada.png" alt="portada">
+           
         </div>
         <div class="container" >
             <div class="text-center">
-                <img id = "subImagenPortada" src="images/iniciarSesion.png" alt="foto iniciar sesion o registro">
+                <img id = "subImagenPortada"  width="20%" src="images/iniciarSesion2.png" alt="foto iniciar sesion o registro">
                 <div class="centrar">
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-at"></i></div>
@@ -55,7 +52,7 @@
             <header class="page-header">
                 <div class="row" >
                     <div class = "col-md-7"> 
-                        <img src="images/cabecera.png" class="pull-left" alt="imagen con nombre de la cabecera"  />
+                        <img src="images/cabecera2.png" widht="100px" height="100px"class="pull-left" alt="imagen con nombre de la cabecera"  />
                     </div>
                     <div class = "col-md-3" >
                         <h2 id = "nombreUsuario"></h2>
@@ -103,14 +100,19 @@
             </div>
 
             <div id = "pestañaAmiguetes">
-                
-
                 <div class="row">
                     <div class = "col-md-8">
                         <div class="panel panel-info">
                             <div class="panel-heading">Partida Amiguetes</div>
                             <div class="panel-body">
-                                <h1>Este es el contenido del panel</h1>
+                                <div class="row">
+                                    <div class = "col-md-9">
+                                        <h3>Este es el contenido del panel</h3>
+                                    </div>
+                                    <div class = "col-md-1">
+                                        <button type="submit"class="btn btn-primary">Actualizar Partida</button>                                 
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,17 +120,37 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">Jugadores</div>
                             <div class="panel-body">
-                                <h1>Nombre</h1>
-                                <h1>Javi</h1>
-                                <h1>Manuel</h1>
-                                <h1>Pepe</h1>
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Nombre</th>
+                                            <th scope="col"> Nº. cartas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <!-- Rellenar con jugadores-->
+                                            <tr>
+                                            <th scope="row">1</th>
+                                            <td>Javi</td>
+                                            <td> - </td>
+                                            </tr>
+                                            <tr>
+                                            <th scope="row">2</th>
+                                            <td>Manuel</td>
+                                            <td> - </td>
+                                            </tr>
+                                            <tr>
+                                            <th scope="row">3</th>
+                                            <td>Pepe</td>
+                                            <td> - </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>                                                                     
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
 
         </div>

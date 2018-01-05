@@ -1,5 +1,5 @@
 body{
-    background-color: brown;
+    background-color: white;
 }
 .input-group{
     padding-top: 1rem;
@@ -29,7 +29,7 @@ body{
 }
 
 .nav-tabs li a, #nombreUsuario{
-    color:orange;
+    color:rgb(60, 70, 201);
 }
 #nombreUsuario{
     padding-right: 1rem;
