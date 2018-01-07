@@ -94,6 +94,11 @@ app.get("/games/:id",passport.authenticate('basic', {session: false}),(request,r
     });
 });
 
+/**
+ * Estado de una partida. El servidor recibe el identi1cador de una partida y devuelve los nombres
+    de los jugadores actualmente inscritos en la misma, o el código 404 en caso de no existir una
+    partida con el identi1cador dado.
+ */
 app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
     
     daoPartida.getPlayersInGame(request.params.gameId,(err,result)=>{
@@ -124,7 +129,7 @@ app.post("/newGame", passport.authenticate('basic', {session: false}), (request,
                 response.status(500);
             }
             response.status(201);
-            response.json({});
+            response.json({gameId: gameId});
         });
     });
 });

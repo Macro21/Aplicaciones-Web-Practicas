@@ -107,10 +107,11 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class = "col-md-9">
-                                        <h3>Este es el contenido del panel</h3>
+                                        <h3>La partida aún no tiene cuatro jugadores.</h3>
+                                        <h3> El identificador de esta partida es <span id="gameId"></span></h3>
                                     </div>
                                     <div class = "col-md-1">
-                                        <button type="submit"class="btn btn-primary">Actualizar Partida</button>                                 
+                                        <button type="submit"class="btn btn-primary" onclick="actualizarInformacionPartida()">Actualizar Partida</button>                                 
                                     </div>
                                 </div>
                             </div>
@@ -128,23 +129,8 @@
                                             <th scope="col"> Nº. cartas</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                                <!-- Rellenar con jugadores-->
-                                            <tr>
-                                            <th scope="row">1</th>
-                                            <td>Javi</td>
-                                            <td> - </td>
-                                            </tr>
-                                            <tr>
-                                            <th scope="row">2</th>
-                                            <td>Manuel</td>
-                                            <td> - </td>
-                                            </tr>
-                                            <tr>
-                                            <th scope="row">3</th>
-                                            <td>Pepe</td>
-                                            <td> - </td>
-                                            </tr>
+                                        <tbody id = "tablaJugadores">
+                                           
                                         </tbody>
                                     </table>                                                                     
                             </div>

@@ -1,1 +1,4 @@
 1º Preguntarle lo del login de bootstrap, el copiar y el include.
+2º Desconectar podemos borrar la partida en la que estamos ? 
+3º Que pone en mis partidas cuando estas en una partida? 
+4º Como abandonar una partida? Desconectando? 
