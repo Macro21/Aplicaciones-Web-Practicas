@@ -60,8 +60,6 @@ function onRemoveButtonClick(event) {
     $.ajax({
         type: "delete",
         url: "/tasks/" + id,
-        contentType: "application/json",
-        data: JSON.stringify({id : id}),
         success: function(data, textStatus, jqXHR){
             liPadre.remove();
         },
