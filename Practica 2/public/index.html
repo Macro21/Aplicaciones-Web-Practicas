@@ -100,17 +100,17 @@
             </div>
 
             <div id = "pestañaAmiguetes">
-                <div class="row">
+                <div class="row-fluid">
                     <div class = "col-md-8">
                         <div class="panel panel-info">
                             <div class="panel-heading">Partida Amiguetes</div>
                             <div class="panel-body">
                                 <div class="row">
                                     <div class = "col-md-9">
-                                        <h3>La partida aún no tiene cuatro jugadores.</h3>
-                                        <h3> El identificador de esta partida es <span id="gameId"></span></h3>
+                                        <h3 id = "esperandoJugadores">La partida aún no tiene cuatro jugadores.<br>
+                                            El identificador de esta partida es <span id="gameId"></span></h3>
                                     </div>
-                                    <div class = "col-md-1">
+                                    <div class = "col-md-3">
                                         <button type="submit"class="btn btn-primary" onclick="actualizarInformacionPartida()">Actualizar Partida</button>                                 
                                     </div>
                                 </div>
@@ -121,24 +121,40 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">Jugadores</div>
                             <div class="panel-body">
-                                    <table class="table">
-                                        <thead class="thead-light">
-                                            <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col"> Nº. cartas</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id = "tablaJugadores">
-                                           
-                                        </tbody>
-                                    </table>                                                                     
+                                <table class="table">
+                                    <thead class="thead-light">
+                                        <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col"> Nº. cartas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id = "tablaJugadores">
+                                    </tbody>
+                                </table>                                                                     
+                            </div>
+                        </div>
+                    </div>
+               
+                    <div class = "col-md-8 up">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Cartas en la mesa</div>
+                            <div class="panel-body">
+                                Contenido
+                            </div>
+                        </div>
+                    </div>
+              
+                    <div class = "col-md-8">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Tus cartas</div>
+                            <div class="panel-body">
+                                MIS CARTAS
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </body>

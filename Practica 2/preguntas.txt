@@ -2,3 +2,5 @@
 2º Desconectar podemos borrar la partida en la que estamos ? 
 3º Que pone en mis partidas cuando estas en una partida? 
 4º Como abandonar una partida? Desconectando? 
+5º Las cartas las reparte el servidor y el cliente hace una peticion para ver como se han repartido para cada jugador o como? 
+Al repartirse se guardan en la base de datos en estado? o donde? 

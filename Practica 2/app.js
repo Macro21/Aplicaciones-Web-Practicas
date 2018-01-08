@@ -154,15 +154,17 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
                 if(resultPlayersInGame.length === 4){
                     response.status(400);
                 }
-                //si existe la partida y no se ha completado
-                daoUsuario.insertPlayerInGame(request.user.id,request.body.gameId,(err)=>{
-                    if(err){
-                        response.status(500);
-                        console.log(err);
-                    }
-                    response.status(200);
-                    response.json({});
-                });
+                else{
+                    //si existe la partida y no se ha completado
+                    daoUsuario.insertPlayerInGame(request.user.id,request.body.gameId,(err)=>{
+                        if(err){
+                            response.status(500);
+                            console.log(err);
+                        }
+                        response.status(200);
+                        response.json({});
+                    });
+                }
             });
         }
     });
