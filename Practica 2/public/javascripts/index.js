@@ -61,7 +61,7 @@ function crearPartida(){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR)=>{
-            alert("Correcto!");
+           // alert("Correcto!");
             $("#gameId").text(data.gameId);
         },
         error: (jqXHR, status, errorThrown)=>{
@@ -121,9 +121,12 @@ function unirsePartida(){
 function pestañaAmiguetes(){
     activarPestañaPulsada();
     $("#pestañaPartidas").hide();
-    $("#pestañaAmiguetes").show();
+    let estaOcupado = $("#gameId").is(":empty");
+    if(!estaOcupado){
+        $("#pestañaAmiguetes").show();
+        actualizarInformacionPartida();
+    }
 
-    actualizarInformacionPartida();
 };
 
 function crearFilaTablaJugadores(nombre,numero,cartas){
@@ -154,12 +157,44 @@ function actualizarInformacionPartida(){
             for(i=0; i<data.length; i++){
                 crearFilaTablaJugadores(data[i].login,i+1,"-");
             }
+            iniciarPartida();
+          /*  $.ajax({
+                method: "GET",
+                url: "/gameState/"+ gameId,
+                beforeSend: (req)=> {
+                    // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+                    req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+                },
+                success: (data,status,jqXHR) =>{
+                    if(data.length == 4){
+                        iniciarPartida();
+                    }
+                },
+                error: (jqXHR, status, errorThrown)=>{
+                    alert("Se ha producido un error PA " + errorThrown);
+                },
+            });*/
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error en la pestaña amiguetes " + errorThrown);
         },
         
     });
+};
+
+
+function iniciarPartida(){
+    $("#esperandoJugadores").hide();
+    repartirCartas();
+
+
+};
+
+function repartirCartas(){
+
+    //¿Lo hace el servidor o el cliente?
+    
+
 };
 
 function pestañaFamiliar(){
