@@ -1,6 +1,13 @@
 1º Preguntarle lo del login de bootstrap, el copiar y el include.
+
 2º Desconectar podemos borrar la partida en la que estamos ? 
+Si, si no quieres no.
+
 3º Que pone en mis partidas cuando estas en una partida? 
+
 4º Como abandonar una partida? Desconectando? 
+No puede abandonar, se reengancha
+
 5º Las cartas las reparte el servidor y el cliente hace una peticion para ver como se han repartido para cada jugador o como? 
+
 Al repartirse se guardan en la base de datos en estado? o donde? 

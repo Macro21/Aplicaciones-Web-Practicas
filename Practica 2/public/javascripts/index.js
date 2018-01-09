@@ -190,8 +190,7 @@ function iniciarPartida(){
 
 };
 
-function repartirCartas(){
-
+function repartirCartas(){+0
     //¿Lo hace el servidor o el cliente?
     
 
