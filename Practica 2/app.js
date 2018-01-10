@@ -184,3 +184,21 @@ app.listen(config.port, function(err) {
         console.log(`Servidor escuchando en puerto ${config.port}.`);
     }
 });
+
+/* PRUEBAS RICARDO */
+app.get("/dataGame/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
+    
+    daoPartida.getGame(request.params.gameId,(err,result)=>{
+        if(err){
+            response.status(500);
+            console.log(err);
+        }
+        if(result.length === 0){
+            response.status(404);//Not found
+        }
+        else{
+            response.status(200);
+            response.json({result});
+        }
+    });
+});
