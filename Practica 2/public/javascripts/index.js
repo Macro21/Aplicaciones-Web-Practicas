@@ -35,13 +35,14 @@ function mostrarPanelPrincipal(user){
     $("#portada").hide();
     $("#pestañas").show();
     $("#pestañaAmiguetes").hide();
+    $(".pestañaPartidaEnCurso").hide();
     $("#nombreUsuario").text(user);
 };
 
 function pestañaMisPartidas(){
     activarPestañaPulsada();
     $("#pestañaAmiguetes").hide();
-    //$("#pestañaFamilia").hide();
+    $(".pestañaPartidaEnCurso").hide();
     $("#pestañaPartidas").show();
 };
 
@@ -61,8 +62,9 @@ function crearPartida(){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR)=>{
-           // alert("Correcto!");
+            // alert("Correcto!");
             $("#gameId").text(data.gameId);
+            crearPestaña(nombrePartida,data.gameId);
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error al crear partida: " + errorThrown);
@@ -91,14 +93,27 @@ function crearPartida(){
         }
     });*/
 };
-
 function unirsePartida(){
-
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
     let gameId = $("#up").prop("value"); 
-
+    let nombrePartida;
+    $.ajax({ //Busco nombre y lo guardo
+        method: "GET",
+        url: "/dataGame/" + gameId,
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR) =>{
+            nombrePartida= data.result[0].nombre;
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error" + errorThrown);
+        },
+        
+    });
     $.ajax({//Incorporación a una partida. 
         method: "POST",
         url: "/joinGame",
@@ -111,6 +126,7 @@ function unirsePartida(){
         success: (data, status, jqXHR) =>{
             alert("ENTRADA EN PARTIDA CORRECTO");
             $("#gameId").text(gameId);
+            crearPestaña(nombrePartida,gameId);
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Error en entrar a la partida" + errorThrown);
@@ -196,11 +212,6 @@ function repartirCartas(){+0
 
 };
 
-function pestañaFamiliar(){
-    activarPestañaPulsada();
-    $("#pestañaPartidas").hide();
-};
-
 function activarPestañaPulsada(){
     let lista = document.getElementsByClassName("nav-tabs");
     let elems = $(lista).children();
@@ -239,7 +250,6 @@ function nuevoUsuario(event) {
     $("#crearUsuario").show();
     $("#subImagenPortada").attr("src","images/crearUsuario.png");
 };
-
 function crearNuevoUsuario(){
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
@@ -263,4 +273,69 @@ function crearNuevoUsuario(){
         }
     });
 };
+/**---- METODOS RICARDO */
+function crearPestaña(nombrePartida, gameId){
+    $("#menu").append(
+        $("<li>").attr("data-game-id",gameId)
+    );
+    $("[data-game-id=\""+ gameId+"\"]").append(
+        $("<a>").attr("onClick","verPartida("+gameId+");")
+                .text(nombrePartida)
+        );
+}
+function verPartida(gameId){ //Mostramos la pestaña con la partida de id=gameId
+    activarPestañaPulsada();
+    $("#pestañaPartidas").hide();
+    let estaOcupado = $("#gameId").is(":empty");
+    if(!estaOcupado){
+        $(".pestañaPartidaEnCurso").show();
+        $("#botonActualizar").attr("onClick","actualizarInformacionPartida("+gameId+");");
+        actualizarInformacionPartida(gameId);
+    }
 
+};
+function actualizarInformacionPartida(gameId){
+    let i;
+    $("#partidaEnCursoId").text(gameId);
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+    $.ajax({ //Busco nombre y lo introduzco
+        method: "GET",
+        url: "/dataGame/" + gameId,
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR) =>{
+            $("#nombrePartida").text(data.result[0].nombre);
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error" + errorThrown);
+        },
+        
+    });
+
+    $.ajax({ //Busco jugadores y relleno la tabla
+        method: "GET",
+        url: "/gameState/" + gameId,
+
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR) =>{
+            $("#tablaJugadores").empty();
+            console.log(data);
+            for(i=0; i<data.length; i++){
+                crearFilaTablaJugadores(data[i].login,i+1,"-");
+            }
+            //If num jugadores == 4 entonces iniciar partida
+            //iniciarPartida();
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error en la pestaña amiguetes " + errorThrown);
+        },
+        
+    });
+};
