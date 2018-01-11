@@ -1,5 +1,4 @@
 
-
 "use strict";
 
 const express = require("express");
@@ -32,30 +31,55 @@ const pool = mysql.createPool({
 const daoUsuario = new daoUsuarios.DAOUsuarios(pool);
 const daoPartida = new daoPartidas.DAOPartidas(pool);
 
-function funCallback(user, pass, callback) {
 
-    daoUsuario.isUserCorrect(user,pass,(err,correctPassword)=>{
-        if(err){
-           // response.status(500);//internal server error
-           // response.end(err.message);
-            console.log(err);
-        }
-        if(correctPassword){//en realidad comprueba que el usuario exista y que tenga esa contraseña
-            callback(null, { id: correctPassword.id });
-        }
-        else{
-            callback(null, false);
-        }
-    });
-}
-
-var miEstrategia =new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' }, funCallback);
-passport.use(miEstrategia);
+passport.use(new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' },
+    function (user, pass, callback) {
+        daoUsuario.isUserCorrect(user,(err,userInfo)=>{
+            if(err){
+                callback(err);
+                console.log(err);
+            }
+            if(userInfo.password === pass && user === userInfo.login){//comprueba que el usuario exista y que tenga esa contraseña
+                callback(null, {id: userInfo.id });
+            }
+            else{
+                callback(null, false);
+            }
+        });
+    }
+));
 
 app.get("/protegido",passport.authenticate('basic', {session: false}), (request, response)=> {
     response.json({permitido: true});
 });
 
+app.post("/login", (request, response)=>{
+    let password = request.body.datosUsuario.password;
+    let name = request.body.datosUsuario.user;
+    daoUsuario.isUserCorrect(name,(err,userInfo)=>{
+        if(err){
+            response.status(500);//internal server error
+            response.end(err.message);
+            console.log(err);
+        }
+        if(userInfo){// comprueba que el usuario exista y que tenga esa contraseña
+            
+            if(userInfo.password === password){
+                response.status(200);
+                response.json({usuarioCorrecto:true});
+                request.user = name;
+                request.pass = passport;
+            }
+            else{
+                response.json({usuarioCorrecto: false});
+            }
+        }
+        else{
+            response.status(401);
+            response.json({usuarioCorrecto: false});
+        }
+    });
+});
 
 app.post("/newUser", (request, response) => {
     let login = request.body.newUser.user;

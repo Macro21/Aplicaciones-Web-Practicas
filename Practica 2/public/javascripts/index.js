@@ -6,9 +6,10 @@
 $(() => {
     $("#pestañas").hide();
     $("#crearUsuario").hide();
+
 });
 
-function iniciarSesion() {
+/*function iniciarSesion() {
 
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
@@ -30,26 +31,54 @@ function iniciarSesion() {
         }      
     });
 };
+*/
+function iniciarSesion() {
 
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+
+    let datosUsuario = {
+        user: user,
+        password: password
+    };
+
+    $.ajax({
+        method: "POST",
+        url: "/login",
+        contentType: "application/json",
+        data: JSON.stringify({datosUsuario}),
+        success: function(data, state, jqXHR) {
+            if(data.usuarioCorrecto){
+                mostrarPanelPrincipal(user);
+            }
+            else{
+                alert("Usuario o contraseña incorrectos!");
+            }
+        },
+        error: function (jqXHR, status, errorThrown){
+            alert("Este usuario no existe!");
+        }      
+    });
+};
 function mostrarPanelPrincipal(user){
     $("#portada").hide();
     $("#pestañas").show();
-    $("#pestañaAmiguetes").hide();
     $(".pestañaPartidaEnCurso").hide();
     $("#nombreUsuario").text(user);
 };
 
 function pestañaMisPartidas(){
     activarPestañaPulsada();
-    $("#pestañaAmiguetes").hide();
     $(".pestañaPartidaEnCurso").hide();
     $("#pestañaPartidas").show();
 };
 
 function crearPartida(){
     let nombrePartida = $("#cp").prop("value");
+
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
+
     let cadenaBase64 = btoa(user + ":" + password);
 
     $.ajax({
@@ -70,35 +99,15 @@ function crearPartida(){
             alert("Se ha producido un error al crear partida: " + errorThrown);
         }
     });
-
-  /*  $.ajax({//Acceso a las partidas en las que participa un usuario.
-        method: "GET",
-        url: "/gameState/" + 1,
-        success: (data,status,jqXHR)=>{
-            alert(data);
-        },
-        error: (jqXHR,status,errorThrown)=>{
-            alert("Se ha producido un error l: " + errorThrown);
-        }
-    });*/
-
-    /*$.ajax({//Estado de una partida.
-        method: "GET",
-        url: "/games/" + 14,
-        success: (data,status,jqXHR)=>{
-            alert(data);
-        },
-        error: (jqXHR,status,errorThrown)=>{
-            alert("Se ha producido un error l: " + errorThrown);
-        }
-    });*/
 };
 function unirsePartida(){
+
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
     let gameId = $("#up").prop("value"); 
     let nombrePartida;
+    
     $.ajax({ //Busco nombre y lo guardo
         method: "GET",
         url: "/dataGame/" + gameId,
@@ -134,17 +143,6 @@ function unirsePartida(){
     });
 };
 
-function pestañaAmiguetes(){
-    activarPestañaPulsada();
-    $("#pestañaPartidas").hide();
-    let estaOcupado = $("#gameId").is(":empty");
-    if(!estaOcupado){
-        $("#pestañaAmiguetes").show();
-        actualizarInformacionPartida();
-    }
-
-};
-
 function crearFilaTablaJugadores(nombre,numero,cartas){
     let fila = $("<tr>");
     fila.append($("<th>").attr("scope","row").text(numero));
@@ -152,52 +150,6 @@ function crearFilaTablaJugadores(nombre,numero,cartas){
     fila.append($("<td>").attr("id","nrCartasJugador1").text(cartas));
     $("#tablaJugadores").append(fila);
 };
-
-function actualizarInformacionPartida(){
-    let i;
-    let gameId = $("#gameId").text();
-    let user = $("#email").prop("value");
-    let password = $("#password").prop("value");
-    let cadenaBase64 = btoa(user + ":" + password);
-
-    $.ajax({
-        method: "GET",
-        url: "/gameState/" + gameId,
-
-        beforeSend: (req)=> {
-            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
-            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
-        },
-        success: (data,status,jqXHR) =>{
-            $("#tablaJugadores").empty();
-            for(i=0; i<data.length; i++){
-                crearFilaTablaJugadores(data[i].login,i+1,"-");
-            }
-            iniciarPartida();
-          /*  $.ajax({
-                method: "GET",
-                url: "/gameState/"+ gameId,
-                beforeSend: (req)=> {
-                    // Añadimos la cabecera 'Authorization' con los datos de autenticación.
-                    req.setRequestHeader("Authorization","Basic " + cadenaBase64);
-                },
-                success: (data,status,jqXHR) =>{
-                    if(data.length == 4){
-                        iniciarPartida();
-                    }
-                },
-                error: (jqXHR, status, errorThrown)=>{
-                    alert("Se ha producido un error PA " + errorThrown);
-                },
-            });*/
-        },
-        error: (jqXHR, status, errorThrown)=>{
-            alert("Se ha producido un error en la pestaña amiguetes " + errorThrown);
-        },
-        
-    });
-};
-
 
 function iniciarPartida(){
     $("#esperandoJugadores").hide();
@@ -273,7 +225,7 @@ function crearNuevoUsuario(){
         }
     });
 };
-/**---- METODOS RICARDO */
+
 function crearPestaña(nombrePartida, gameId){
     $("#menu").append(
         $("<li>").attr("data-game-id",gameId)
@@ -282,7 +234,8 @@ function crearPestaña(nombrePartida, gameId){
         $("<a>").attr("onClick","verPartida("+gameId+");")
                 .text(nombrePartida)
         );
-}
+};
+
 function verPartida(gameId){ //Mostramos la pestaña con la partida de id=gameId
     activarPestañaPulsada();
     $("#pestañaPartidas").hide();
@@ -292,14 +245,17 @@ function verPartida(gameId){ //Mostramos la pestaña con la partida de id=gameId
         $("#botonActualizar").attr("onClick","actualizarInformacionPartida("+gameId+");");
         actualizarInformacionPartida(gameId);
     }
-
 };
+
 function actualizarInformacionPartida(gameId){
     let i;
     $("#partidaEnCursoId").text(gameId);
+
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
+
     let cadenaBase64 = btoa(user + ":" + password);
+
     $.ajax({ //Busco nombre y lo introduzco
         method: "GET",
         url: "/dataGame/" + gameId,
@@ -336,6 +292,5 @@ function actualizarInformacionPartida(gameId){
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error en la pestaña amiguetes " + errorThrown);
         },
-        
     });
 };
