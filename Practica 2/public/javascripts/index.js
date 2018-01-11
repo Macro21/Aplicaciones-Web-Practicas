@@ -9,29 +9,6 @@ $(() => {
 
 });
 
-/*function iniciarSesion() {
-
-    let user = $("#email").prop("value");
-    let password = $("#password").prop("value");
-    let cadenaBase64 = btoa(user + ":" + password);
-
-    $.ajax({
-        method: "GET",
-        url: "/protegido",
-        beforeSend: (req)=> {//quitar no hace falta aqui
-            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
-            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
-        },
-        success: function(data, state, jqXHR) {
-            if (data.permitido) {
-                console.log("¡Acceso permitido!");
-                //redirigir a inicio del juego
-                mostrarPanelPrincipal(user);
-            }   
-        }      
-    });
-};
-*/
 function iniciarSesion() {
 
     let user = $("#email").prop("value");
