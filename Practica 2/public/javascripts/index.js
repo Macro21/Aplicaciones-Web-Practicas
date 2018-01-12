@@ -136,10 +136,11 @@ function iniciarPartida(){
 };
 
 function repartirCartas(){+0
-    //¿Lo hace el servidor o el cliente?
+    //lo hace el server
     
 
 };
+
 
 function activarPestañaPulsada(){
     let lista = document.getElementsByClassName("nav-tabs");
