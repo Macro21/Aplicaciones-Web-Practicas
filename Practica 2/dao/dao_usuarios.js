@@ -96,7 +96,26 @@ class DAOUsuarios {
             );
         });
     };
-
+    getIdUser(user, callback){
+        this.pool.getConnection((err,connection)=>{
+            if(err){
+                callback(err);
+                return;
+            }
+            connection.query(
+                "select id from usuarios where login = ?",
+                [user],
+                (err,rows) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                    }
+                    callback(null, rows[0]);
+                    connection.release();
+                }
+            );
+        });
+    };
     getGamesByUser(userId, callback){
         this.pool.getConnection((err,connection)=>{
             if(err){

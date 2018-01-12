@@ -11,3 +11,4 @@ No puede abandonar, se reengancha
 5º Las cartas las reparte el servidor y el cliente hace una peticion para ver como se han repartido para cada jugador o como? 
 
 Al repartirse se guardan en la base de datos en estado? o donde? 
+Al desconectar y volver a conectar, si desconectabamos en una partida al conectar sale vacio hasta que pinchas en mis partidas. 

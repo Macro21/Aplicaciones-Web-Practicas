@@ -6,7 +6,6 @@
 $(() => {
     $("#pestañas").hide();
     $("#crearUsuario").hide();
-
 });
 
 function iniciarSesion() {
@@ -39,11 +38,58 @@ function iniciarSesion() {
 };
 function mostrarPanelPrincipal(user){
     $("#portada").hide();
+    cargarMenu();
     $("#pestañas").show();
     $(".pestañaPartidaEnCurso").hide();
     $("#nombreUsuario").text(user);
 };
+//Cargo las partidas de la base de datos y para cada una hago una pestaña pasandole el nombre y el id
+function cargarMenu(){
+    //Primero cargo la pestaña mis partidas
+    let misPartidas= "<li class=\"active\"><a onClick=pestañaMisPartidas();>Mis partidas</a></li>";
+    $("#menu").append(misPartidas);
+    //Cargo el id de usuario para depues cargar sus partidas.
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
 
+    $.ajax({
+        method: "GET",
+        url: "/idUser/" + user,
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR)=>{
+            cargarPartidas(data.result.id)
+        },
+        error: (jqXHR,status,errorThrown) =>{
+            alert("Ha ocurrido un error" + errorThrown);
+        }
+    });  
+}
+function cargarPartidas(idUser){
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+
+    $.ajax({
+        method: "GET",
+        url: "/games/"+ idUser,
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR)=>{
+            for(let i= 0; i< data.result.length;i++){
+                crearPestaña(data.result[i].nombre,data.result[i].id);
+            }
+        },
+        error: (jqXHR,status,errorThrown) =>{
+            alert("Ha ocurrido un error" + errorThrown);
+        }
+    });
+}
 function pestañaMisPartidas(){
     activarPestañaPulsada();
     $(".pestañaPartidaEnCurso").hide();
@@ -128,18 +174,7 @@ function crearFilaTablaJugadores(nombre,numero,cartas){
     $("#tablaJugadores").append(fila);
 };
 
-function iniciarPartida(){
-    $("#esperandoJugadores").hide();
-    repartirCartas();
 
-
-};
-
-function repartirCartas(){+0
-    //lo hace el server
-    
-
-};
 
 
 function activarPestañaPulsada(){
@@ -165,9 +200,10 @@ function desconectar(){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR)=>{
-            $("#portada").show();
+            $("#portada").show();~
+            $("#menu").empty();
             $("#pestañas").hide();
-            //
+            
         },
         error: (jqXHR,status,errorThrown) =>{
             alert("Ha ocurrido un error" + errorThrown);
@@ -233,6 +269,8 @@ function actualizarInformacionPartida(gameId){
     let password = $("#password").prop("value");
 
     let cadenaBase64 = btoa(user + ":" + password);
+    let nombrePartida;
+    let numJugadores = 4;
 
     $.ajax({ //Busco nombre y lo introduzco
         method: "GET",
@@ -243,6 +281,7 @@ function actualizarInformacionPartida(gameId){
         },
         success: (data,status,jqXHR) =>{
             $("#nombrePartida").text(data.result[0].nombre);
+            nombrePartida=data.result[0].nombre;
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error" + errorThrown);
@@ -260,15 +299,62 @@ function actualizarInformacionPartida(gameId){
         },
         success: (data,status,jqXHR) =>{
             $("#tablaJugadores").empty();
-            console.log(data);
             for(i=0; i<data.length; i++){
                 crearFilaTablaJugadores(data[i].login,i+1,"-");
             }
-            //If num jugadores == 4 entonces iniciar partida
-            //iniciarPartida();
+            if(i === numJugadores)
+                iniciarPartida(gameId);
         },
         error: (jqXHR, status, errorThrown)=>{
-            alert("Se ha producido un error en la pestaña amiguetes " + errorThrown);
+            alert("Se ha producido un error en la pestaña "+nombrePartida+ + errorThrown);
+        },
+    });
+};
+function rellenarJugadores(gameId){
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+    $.ajax({
+        method: "GET",
+        url: "/gameState/" + gameId,
+
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR) =>{
+            $("#tablaJugadores").empty();
+            for(let i=0; i<data.length; i++){
+                crearFilaTablaJugadores(data[i].login,i+1,"13");
+            }
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error al rellenar la tabla de jugadores " + errorThrown);
+        },
+    });
+}
+function iniciarPartida(gameId){
+    $("#esperandoJugadores").hide();
+    repartirCartas(gameId);
+};
+
+function repartirCartas(gameId){
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+    $.ajax({
+        method: "GET",
+        url: "/dealCards/" + gameId,
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: (data,status,jqXHR) =>{
+            rellenarJugadores(gameId);
+            //actualizarCartasenMano();
+        },
+        error: (jqXHR, status, errorThrown)=>{
+            alert("Se ha producido un error al repartir cartas " + errorThrown);
         },
     });
 };

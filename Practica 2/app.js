@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const passport = require("passport");
 const passportHTTP = require("passport-http");
+const underscore = require("underscore");
 
 const app = express();
 
@@ -107,9 +108,9 @@ app.post("/newUser", (request, response) => {
     });
 });
 
-app.get("/games/:id",passport.authenticate('basic', {session: false}),(request,response)=>{
+app.get("/games/:idUser",passport.authenticate('basic', {session: false}),(request,response)=>{
     
-    daoUsuario.getGamesByUser(request.params.id, (err,result)=>{
+    daoUsuario.getGamesByUser(request.params.idUser, (err,result)=>{
         if(err){
             response.status(500);
         }
@@ -226,3 +227,35 @@ app.get("/dataGame/:gameId",passport.authenticate('basic', {session: false}),(re
         }
     });
 });
+
+app.get("/idUser/:user",passport.authenticate('basic', {session: false}),(request,response)=>{
+    
+    daoUsuario.getIdUser(request.params.user,(err,result)=>{
+        if(err){
+            response.status(500);
+            console.log(err);
+        }
+        if(result.length === 0){
+            response.status(404);//Not found
+        }
+        else{
+            response.status(200);
+            response.json({result});
+        }
+    });
+});
+app.get("/dealCards/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
+    let baraja=["A_P","2_P","3_P","4_P","5_P","6_P","7_P","8_P","9_P","10_P","J_P","Q_P","K_P",
+                "A_H","2_H","3_H","4_H","5_H","6_H","7_H","8_H","9_H","10_H","J_H","Q_H","K_H",
+                "A_D","2_D","3_D","4_D","5_D","6_D","7_D","8_D","9_D","10_D","J_D","Q_D","K_D",
+                "A_S","2_S","3_S","4_S","5_S","6_S","7_S","8_S","9_S","10_S","J_S","Q_S","K_S"];
+    barajar(baraja);
+    //Repartir cartas entre los jugadores
+
+    //PARA QUE NO PETE
+    let result= "OK";
+    response.json({result});
+});
+function barajar(baraja){
+    baraja= underscore.shuffle(baraja);
+}
