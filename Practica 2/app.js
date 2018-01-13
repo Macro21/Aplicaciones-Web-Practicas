@@ -50,10 +50,6 @@ passport.use(new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' }
     }
 ));
 
-app.get("/protegido",passport.authenticate('basic', {session: false}), (request, response)=> {
-    response.json({permitido: true});
-});
-
 app.post("/login", (request, response)=>{
     let password = request.body.datosUsuario.password;
     let name = request.body.datosUsuario.user;
@@ -68,8 +64,6 @@ app.post("/login", (request, response)=>{
             if(userInfo.password === password){
                 response.status(200);
                 response.json({usuarioCorrecto:true});
-                request.user = name;
-                request.pass = passport;
             }
             else{
                 response.json({usuarioCorrecto: false});
@@ -108,7 +102,7 @@ app.post("/newUser", (request, response) => {
     });
 });
 
-app.get("/games/:idUser",passport.authenticate('basic', {session: false}),(request,response)=>{
+/*app.get("/games/:idUser",passport.authenticate('basic', {session: false}),(request,response)=>{
     
     daoUsuario.getGamesByUser(request.params.idUser, (err,result)=>{
         if(err){
@@ -116,8 +110,22 @@ app.get("/games/:idUser",passport.authenticate('basic', {session: false}),(reque
         }
         response.status(200);
         response.json({result});
+        console.log(result);
+    });
+});*/
+
+app.get("/userGames",passport.authenticate('basic', {session: false}), (request, response) =>{
+    
+    daoUsuario.getGamesByUser(request.user.id, (err,result)=>{
+        if(err){
+            response.status(500);
+            console.log(err);
+        }
+        response.status(200);
+        response.json({games: result});
     });
 });
+
 
 /**
  * Estado de una partida. El servidor recibe el identi1cador de una partida y devuelve los nombres
@@ -136,7 +144,7 @@ app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(r
         }
         else{
             response.status(200);
-            response.json(result);
+            response.json({games: result});
         }
     });
 });
@@ -162,22 +170,24 @@ app.post("/newGame", passport.authenticate('basic', {session: false}), (request,
 //Incorporación a una partida.
 app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,response)=>{
 
-    daoPartida.getGame(request.body.gameId,(err,result)=>{
+    daoPartida.getGame(request.body.gameId,(err,infoGame)=>{
         if(err){
             console.log(err);
             response.status(500);
         }
-        if(result.length === 0){//si no existe la partida
-            response.status(404);
+        if(infoGame.length === 0){//si no existe la partida
+            response.status(404); //Not found
         }
         else{
             daoPartida.getPlayersInGame(request.body.gameId, (err,resultPlayersInGame)=>{
                 if(err){
                     response.status(500);
+                    response.json({});
                     console.log(err);
                 }
                 if(resultPlayersInGame.length === 4){
                     response.status(400);
+                    response.json({});
                 }
                 else{
                     //si existe la partida y no se ha completado
@@ -186,8 +196,13 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
                             response.status(500);
                             console.log(err);
                         }
-                        response.status(200);
-                        response.json({});
+                        if(resultPlayersInGame.length + 1 === 4){//El +1 es para que quede claro que son 4 jugadores al insertar el ultimo
+                            iniciarPartida(request.body.gameId, request, response, infoGame);
+                        }
+                        else{
+                            response.status(200);
+                            response.json({nombrePartida: infoGame[0].nombre, iniciarPartida: false});
+                        }  
                     });
                 }
             });
@@ -195,11 +210,70 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
     });
 });
 
+function iniciarPartida(gameId, request, response, infoGame){
+    let baraja=["A_P","2_P","3_P","4_P","5_P","6_P","7_P","8_P","9_P","10_P","J_P","Q_P","K_P",
+                "A_H","2_H","3_H","4_H","5_H","6_H","7_H","8_H","9_H","10_H","J_H","Q_H","K_H",
+                "A_D","2_D","3_D","4_D","5_D","6_D","7_D","8_D","9_D","10_D","J_D","Q_D","K_D",
+                "A_S","2_S","3_S","4_S","5_S","6_S","7_S","8_S","9_S","10_S","J_S","Q_S","K_S"];
+    let jugador = {
+        idJugador: -1,
+        nrCartas: 13,
+        cartas: []
+    };
+    let playersInfo = [];
+
+    let gameInfo = {
+        playerInfo: playersInfo,
+        nrCartasEnMesa: 0,
+        valorCartasEnMesa: [],
+        idJugadorActual: -1, // es el id del jugador que tiene que empezar
+        idJugadorAnterior: -1
+    };
+
+    baraja= underscore.shuffle(baraja);
+
+    //Repartir las cartas
+    daoPartida.getPlayersInGame(gameId, (err,infoPlayersInGame)=>{
+        if(err){
+            response.status(500);
+            response.json({});
+            console.log(err);
+        }
+        //Repartir cartas
+        for(let player of infoPlayersInGame){
+            jugador.idJugador = player.id;
+            jugador.cartas = baraja.slice(0,13);
+            baraja.splice(0,13);
+            playersInfo.push(jugador);
+            //Se hace esta parte para mantener la misma estructura
+            jugador = new Object();
+            jugador.idJugador = -1;
+            jugador.nrCartas = 13;
+            jugador.cartas = [];
+        }
+
+        gameInfo.playerInfo = playersInfo;
+        // Despues de mezclar los objetos del array, me quedo con el id del jugador primero para que empiece la partida
+        infoPlayersInGame = underscore.shuffle(infoPlayersInGame);
+        gameInfo.idJugadorActual = infoPlayersInGame[0].id; 
+
+        //Meterlas en la bd en estatus
+        daoPartida.stateUpdate(gameId, JSON.stringify(gameInfo), (err)=>{
+            if(err){
+                response.status(500);
+                console.log(err);
+            }
+            response.status(200);
+            response.json({nombrePartida: infoGame[0].nombre, iniciarPartida: true});
+        }); 
+    });
+};
+
+
 app.get("/logout",(request,response)=>{
     request.logout();
     response.json({});
 });
-
 
 app.listen(config.port, function(err) {
     if (err) {
@@ -209,53 +283,3 @@ app.listen(config.port, function(err) {
         console.log(`Servidor escuchando en puerto ${config.port}.`);
     }
 });
-
-/* PRUEBAS RICARDO */
-app.get("/dataGame/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
-    
-    daoPartida.getGame(request.params.gameId,(err,result)=>{
-        if(err){
-            response.status(500);
-            console.log(err);
-        }
-        if(result.length === 0){
-            response.status(404);//Not found
-        }
-        else{
-            response.status(200);
-            response.json({result});
-        }
-    });
-});
-
-app.get("/idUser/:user",passport.authenticate('basic', {session: false}),(request,response)=>{
-    
-    daoUsuario.getIdUser(request.params.user,(err,result)=>{
-        if(err){
-            response.status(500);
-            console.log(err);
-        }
-        if(result.length === 0){
-            response.status(404);//Not found
-        }
-        else{
-            response.status(200);
-            response.json({result});
-        }
-    });
-});
-app.get("/dealCards/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
-    let baraja=["A_P","2_P","3_P","4_P","5_P","6_P","7_P","8_P","9_P","10_P","J_P","Q_P","K_P",
-                "A_H","2_H","3_H","4_H","5_H","6_H","7_H","8_H","9_H","10_H","J_H","Q_H","K_H",
-                "A_D","2_D","3_D","4_D","5_D","6_D","7_D","8_D","9_D","10_D","J_D","Q_D","K_D",
-                "A_S","2_S","3_S","4_S","5_S","6_S","7_S","8_S","9_S","10_S","J_S","Q_S","K_S"];
-    barajar(baraja);
-    //Repartir cartas entre los jugadores
-
-    //PARA QUE NO PETE
-    let result= "OK";
-    response.json({result});
-});
-function barajar(baraja){
-    baraja= underscore.shuffle(baraja);
-}

@@ -25,7 +25,7 @@ class DAOPartidas {
                 return;
             }
             connection.query(
-                "select login from usuarios where id in (Select idUsuario from juega_en where idPartida = ?)",
+                "select login,id from usuarios where id in (Select idUsuario from juega_en where idPartida = ?)",
                 [gameId],
                 (err,rows) => {
                     if(err){
@@ -82,6 +82,29 @@ class DAOPartidas {
                     connection.release();
                 }
             );
+        });
+    };
+
+    stateUpdate(gameId, playersInfo ,callback){
+        this.pool.getConnection((err,connection) => {
+            if(err){
+                callback(err);
+                connection.release();
+                return;
+            }
+            connection.query(
+                "update partidas set estado = ? where id = ?",
+                [playersInfo, gameId],
+                (err) => {
+                    if(err){
+                        connection.release();
+                        callback(err);
+                        console.log(err);
+                    }
+                    callback(null);
+                }
+            );
+            connection.release();
         });
     };
 
