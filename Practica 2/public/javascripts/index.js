@@ -276,6 +276,9 @@ function mostrarCartas(gameId){
         },
         success: (data,status,jqXHR) =>{
             mostrarMano(data.gameInfo.cartas);
+            if(!data.gameInfo.turno){
+                $('#botonesAccion').hide();
+            }
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error al repartir cartas " + errorThrown);

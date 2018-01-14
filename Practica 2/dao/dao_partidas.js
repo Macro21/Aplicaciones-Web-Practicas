@@ -53,6 +53,12 @@ class DAOPartidas {
                         resultado.valorCartasEnMesa = gameInfo.valorCartasEnMesa;
                         resultado.idJugadorActual = gameInfo.idJugadorActual;
                         resultado.idJugadorAnterior = gameInfo.idJugadorAnterior;
+                        if(gameInfo.idJugadorActual === userId){
+                            resultado.turno = true;
+                            console.log(userId);
+                        }
+                       
+
                         let infoPartida= [];
                         for(let row of rows){
                             let aux = {
