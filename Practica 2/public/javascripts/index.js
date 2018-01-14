@@ -275,7 +275,7 @@ function mostrarCartas(gameId){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
-            mostrarMano(data.gameInfo.cartas);
+            mostrarMano(data.gameInfo.cartas,data.gameInfo.turno);
             if(!data.gameInfo.turno){
                 $('#botonesAccion').hide();
             }
@@ -286,21 +286,39 @@ function mostrarCartas(gameId){
     });
 };
 
-function mostrarMano(cartas){
+function mostrarMano(cartas, turno){
     $("#cartas").empty();//Vaciamos el tablero para no añadir dos veces las mismas cartas
     //Añadimos las cartas
     for(let carta of cartas){
         let imagen = $("<img>");
         imagen.attr("src","images/"+ carta + ".png");
         imagen.css("padding","1rem");
+        imagen.css("opacity","0.5")
         $("#cartas").prepend(imagen);
     }
-    $("#cartas").css("text-align","center");
-
+    let lista = document.getElementById("cartas");
+    let elems = $(lista).children();
+    if(turno){
+        for (let i = 0; i <elems.length; i++) {
+            elems[i].addEventListener("click", function(){
+               // $( this ).css("width","20%");
+                $( this ).css("opacity","1");
+                this.className = "selected";
+            });
+        }
+    }
 };
 
 function mostrarAccion(accion){
 
+};
+
+function seleccionar(){
+    let lista = document.getElementsByClassName("selected");
+    for (let i = 0; i <lista.length; i++) {
+        console.log(lista[i].getAttribute("src"));
+    }
+    
 };
 
 function desconectar(){
