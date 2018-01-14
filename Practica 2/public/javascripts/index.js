@@ -258,7 +258,7 @@ function unirsePartida(){
 function iniciarPartida(gameId){
     $("#esperandoJugadores").hide();
     mostrarCartas(gameId);
-    $('')
+   
 };
 
 function mostrarCartas(gameId){
@@ -296,6 +296,9 @@ function mostrarMano(cartas){
 
 };
 
+function mostrarAccion(accion){
+
+};
 
 function desconectar(){
     let user = $("#email").prop("value");
