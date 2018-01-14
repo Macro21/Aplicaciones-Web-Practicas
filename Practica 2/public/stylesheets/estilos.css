@@ -34,7 +34,8 @@ body{
 #nombreUsuario{
     padding-right: 1rem;
 }
-/*
-.up{
-    margin-top: -6rem;
-}*/
+
+#botonesAccion{
+    padding-bottom: 3rem;
+    text-align: center;
+}

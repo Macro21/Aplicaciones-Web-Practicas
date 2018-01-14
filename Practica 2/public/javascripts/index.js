@@ -6,6 +6,7 @@
 $(() => {
     $("#pestañas").hide();
     $("#crearUsuario").hide();
+
 });
 
 function iniciarSesion() {
@@ -145,7 +146,7 @@ function actualizarInformacionPartida(gameId){
 
     let nombrePartida = $("[data-game-id=\""+ gameId+"\"]").text();
 
-    $.ajax({ //Busco jugadores y relleno la tabla
+    $.ajax({ //Busco jugadores y actualizo la tabla
         method: "GET",
         url: "/gameState/" + gameId,
 
@@ -155,8 +156,8 @@ function actualizarInformacionPartida(gameId){
         },
         success: (data,status,jqXHR) =>{
             $("#tablaJugadores").empty();
-            for(i=0; i<data.games.length; i++){
-                crearFilaTablaJugadores(data.games[i].login,i+1,"-");
+            for(i=0; i<data.gameInfo.infoPartida.length; i++){
+                crearFilaTablaJugadores(data.gameInfo.infoPartida[i].login,i+1,"-",gameId);
             }
         },
         error: (jqXHR, status, errorThrown)=>{
@@ -165,12 +166,22 @@ function actualizarInformacionPartida(gameId){
     });
 };
 
-function crearFilaTablaJugadores(nombre,numero,cartas){
+function crearFilaTablaJugadores(nombre,numero,cartas,gameId){
     let fila = $("<tr>");
     fila.append($("<th>").attr("scope","row").text(numero));
     fila.append($("<td>").attr("id","idJugador").text(nombre));
-    fila.append($("<td>").attr("id","nrCartasJugador1").text(cartas));
+    fila.append($("<td>").attr("id","nrCartasJugador").text(cartas));
     $("#tablaJugadores").append(fila);
+    if(numero === 4){
+        iniciarPartida(gameId);
+        //Inicializa la columna del nr de cartas de cada jugador
+        $('#tablaJugadores tr').each(function(){
+            let celdas = $(this).find('#nrCartasJugador');
+            celdas.each(function(){
+                $(this).text("13");
+            });
+        });
+    }
 };
 
 function pestañaMisPartidas(){
@@ -229,9 +240,9 @@ function unirsePartida(){
             nombrePartida = data.nombrePartida;
             $("#gameId").text(gameId);
             crearPestaña(nombrePartida,gameId);
-            if(data.iniciarPartida){
-                iniciarPartida(gameId);
-            }
+          /*  if(data.iniciarPartida){
+                iniciarPartida(ga);
+            }*/
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Error en entrar a la partida " + nombrePartida + " " + errorThrown);
@@ -239,56 +250,44 @@ function unirsePartida(){
     });
 };
 
-/*function rellenarJugadores(gameId){
-    let user = $("#email").prop("value");
-    let password = $("#password").prop("value");
-    let cadenaBase64 = btoa(user + ":" + password);
-    $.ajax({
-        method: "GET",
-        url: "/gameState/" + gameId,
-
-        beforeSend: (req)=> {
-            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
-            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
-        },
-        success: (data,status,jqXHR) =>{
-            $("#tablaJugadores").empty();
-            for(let i=0; i<data.length; i++){
-                crearFilaTablaJugadores(data.games[i].login,i+1,"13");
-            }
-        },
-        error: (jqXHR, status, errorThrown)=>{
-            alert("Se ha producido un error al rellenar la tabla de jugadores " + errorThrown);
-        },
-    });
-}*/
-
 function iniciarPartida(gameId){
     $("#esperandoJugadores").hide();
     mostrarCartas(gameId);
 };
 
 function mostrarCartas(gameId){
-
+    
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
 
     $.ajax({
         method: "GET",
-        url: "/gameStatus/" + gameId,
+        url: "/gameState/" + gameId,
         beforeSend: (req)=> {
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
-            rellenarJugadores(gameId);
-            //actualizarCartasenMano();
+            mostrarMano(data.gameInfo.cartas);
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Se ha producido un error al repartir cartas " + errorThrown);
         },
     });
+};
+
+function mostrarMano(cartas){
+    $("#cartas").empty();//Vaciamos el tablero para no añadir dos veces las mismas cartas
+    //Añadimos las cartas
+    for(let carta of cartas){
+        let imagen = $("<img>");
+        imagen.attr("src","images/"+ carta + ".png");
+        imagen.css("padding","1rem");
+        $("#cartas").prepend(imagen);
+    }
+    $("#cartas").css("text-align","center");
+
 };
 
 

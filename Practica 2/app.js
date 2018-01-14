@@ -133,18 +133,17 @@ app.get("/userGames",passport.authenticate('basic', {session: false}), (request,
     partida con el identi1cador dado.
  */
 app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(request,response)=>{
-    
-    daoPartida.getPlayersInGame(request.params.gameId,(err,result)=>{
+    daoPartida.getPlayersInGame(request.user.id, request.params.gameId,(err,result)=>{
         if(err){
             response.status(500);
             console.log(err);
         }
         if(result.length === 0){
-            response.status(404);//Not found
+            response.status(404); //Not found
         }
         else{
             response.status(200);
-            response.json({games: result});
+            response.json({gameInfo: result});
         }
     });
 });
@@ -169,7 +168,7 @@ app.post("/newGame", passport.authenticate('basic', {session: false}), (request,
 
 //Incorporación a una partida.
 app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,response)=>{
-
+   
     daoPartida.getGame(request.body.gameId,(err,infoGame)=>{
         if(err){
             console.log(err);
@@ -179,13 +178,13 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
             response.status(404); //Not found
         }
         else{
-            daoPartida.getPlayersInGame(request.body.gameId, (err,resultPlayersInGame)=>{
+            daoPartida.getPlayersInGame(request.user.id, request.body.gameId, (err,resultPlayersInGame)=>{
                 if(err){
                     response.status(500);
                     response.json({});
                     console.log(err);
                 }
-                if(resultPlayersInGame.length === 4){
+                if(resultPlayersInGame.infoPartida.length === 4){
                     response.status(400);
                     response.json({});
                 }
@@ -196,7 +195,7 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
                             response.status(500);
                             console.log(err);
                         }
-                        if(resultPlayersInGame.length + 1 === 4){//El +1 es para que quede claro que son 4 jugadores al insertar el ultimo
+                        if(resultPlayersInGame.infoPartida.length + 1 === 4){//El +1 es para que quede claro que son 4 jugadores al insertar el ultimo
                             iniciarPartida(request.body.gameId, request, response, infoGame);
                         }
                         else{
@@ -211,7 +210,7 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
 });
 
 function iniciarPartida(gameId, request, response, infoGame){
-    let baraja=["A_P","2_P","3_P","4_P","5_P","6_P","7_P","8_P","9_P","10_P","J_P","Q_P","K_P",
+    let baraja=["A_C","2_C","3_C","4_C","5_C","6_C","7_C","8_C","9_C","10_C","J_C","Q_C","K_C",
                 "A_H","2_H","3_H","4_H","5_H","6_H","7_H","8_H","9_H","10_H","J_H","Q_H","K_H",
                 "A_D","2_D","3_D","4_D","5_D","6_D","7_D","8_D","9_D","10_D","J_D","Q_D","K_D",
                 "A_S","2_S","3_S","4_S","5_S","6_S","7_S","8_S","9_S","10_S","J_S","Q_S","K_S"];
@@ -233,14 +232,14 @@ function iniciarPartida(gameId, request, response, infoGame){
     baraja= underscore.shuffle(baraja);
 
     //Repartir las cartas
-    daoPartida.getPlayersInGame(gameId, (err,infoPlayersInGame)=>{
+    daoPartida.getPlayersInGame(request.user.id, gameId, (err,infoPlayersInGame)=>{
         if(err){
             response.status(500);
             response.json({});
             console.log(err);
         }
         //Repartir cartas
-        for(let player of infoPlayersInGame){
+        for(let player of infoPlayersInGame.infoPartida){
             jugador.idJugador = player.id;
             jugador.cartas = baraja.slice(0,13);
             baraja.splice(0,13);
@@ -256,7 +255,7 @@ function iniciarPartida(gameId, request, response, infoGame){
         // Despues de mezclar los objetos del array, me quedo con el id del jugador primero para que empiece la partida
         infoPlayersInGame = underscore.shuffle(infoPlayersInGame);
         gameInfo.idJugadorActual = infoPlayersInGame[0].id; 
-
+        
         //Meterlas en la bd en estatus
         daoPartida.stateUpdate(gameId, JSON.stringify(gameInfo), (err)=>{
             if(err){
@@ -268,7 +267,6 @@ function iniciarPartida(gameId, request, response, infoGame){
         }); 
     });
 };
-
 
 app.get("/logout",(request,response)=>{
     request.logout();

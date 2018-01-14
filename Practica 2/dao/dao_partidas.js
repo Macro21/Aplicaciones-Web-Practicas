@@ -17,7 +17,7 @@ class DAOPartidas {
 
     /*Estado de una partida. El servidor recibirá un identi1cador de partida y responderá con el nombre
     de los jugadores actualmente inscritos en la misma.*/
-    getPlayersInGame(gameId,callback){
+    getPlayersInGame(userId, gameId,callback){
         this.pool.getConnection((err,connection)=>{
             if(err){
                 console.log(err);
@@ -25,14 +25,57 @@ class DAOPartidas {
                 return;
             }
             connection.query(
-                "select login,id from usuarios where id in (Select idUsuario from juega_en where idPartida = ?)",
+                "select id, login, estado from " + 
+                "(select id, login from usuarios join juega_en on juega_en.idUsuario = usuarios.id) t1,"+
+                "(select estado from partidas where id = ?) t2",
                 [gameId],
                 (err,rows) => {
                     if(err){
                         connection.release();
                         callback(err);
+                        console.log(err);
                     }
-                    callback(null, rows);
+                    let resultado = {
+                        cartas: [],
+                        valorCartasEnMesa: [],
+                        infoPartida: [],
+                    };
+                    
+                    if(rows[0].estado){//si no es undefined entra
+                        let gameInfo = JSON.parse(rows[0].estado);
+                        for(let player of gameInfo.playerInfo){
+                            if(player.idJugador === userId){
+                                resultado.nrCartas = player.nrCartas;
+                                resultado.cartas = player.cartas;
+                            }
+                        }
+                        resultado.nrCartasEnMesa = gameInfo.nrCartasEnMesa;
+                        resultado.valorCartasEnMesa = gameInfo.valorCartasEnMesa;
+                        resultado.idJugadorActual = gameInfo.idJugadorActual;
+                        resultado.idJugadorAnterior = gameInfo.idJugadorAnterior;
+                        let infoPartida= [];
+                        for(let row of rows){
+                            let aux = {
+                                id: row.id,
+                                login: row.login
+                            };
+                            infoPartida.push(aux);
+                        }
+                        resultado.infoPartida = infoPartida;
+                        callback(null, resultado);
+                    }
+                    else{
+                        let infoPartida= [];
+                        for(let row of rows){
+                            let aux = {
+                                id: row.id,
+                                login: row.login
+                            };
+                            infoPartida.push(aux);
+                        }
+                        resultado.infoPartida = infoPartida;
+                        callback(null, resultado);
+                    }
                     connection.release();
                 }
             );
