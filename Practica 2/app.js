@@ -200,7 +200,7 @@ app.post("/joinGame",passport.authenticate('basic', {session: false}),(request,r
                         }
                         else{
                             response.status(200);
-                            response.json({nombrePartida: infoGame[0].nombre, iniciarPartida: false});
+                            response.json({nombrePartida: infoGame[0].nombre});
                         }  
                     });
                 }
@@ -253,8 +253,8 @@ function iniciarPartida(gameId, request, response, infoGame){
 
         gameInfo.playerInfo = playersInfo;
         // Despues de mezclar los objetos del array, me quedo con el id del jugador primero para que empiece la partida
-        infoPlayersInGame = underscore.shuffle(infoPlayersInGame);
-        gameInfo.idJugadorActual = infoPlayersInGame[0].id; 
+        infoPlayersInGame.infoPartida = underscore.shuffle(infoPlayersInGame.infoPartida);
+        gameInfo.idJugadorActual = infoPlayersInGame.infoPartida[0].id; 
         
         //Meterlas en la bd en estatus
         daoPartida.stateUpdate(gameId, JSON.stringify(gameInfo), (err)=>{
@@ -263,7 +263,7 @@ function iniciarPartida(gameId, request, response, infoGame){
                 console.log(err);
             }
             response.status(200);
-            response.json({nombrePartida: infoGame[0].nombre, iniciarPartida: true});
+            response.json({nombrePartida: infoGame[0].nombre});
         }); 
     });
 };

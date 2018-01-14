@@ -157,7 +157,17 @@ function actualizarInformacionPartida(gameId){
         success: (data,status,jqXHR) =>{
             $("#tablaJugadores").empty();
             for(i=0; i<data.gameInfo.infoPartida.length; i++){
-                crearFilaTablaJugadores(data.gameInfo.infoPartida[i].login,i+1,"-",gameId);
+                let turno = false;
+                let nombre = data.gameInfo.infoPartida[i].login;
+                let nrCartas = data.gameInfo.nrCartas;
+                let userId = data.gameInfo.infoPartida[i].id;
+                if(data.gameInfo.idJugadorActual === userId){
+                    turno = true;
+                }
+                crearFilaTablaJugadores(nombre,i+1,nrCartas,gameId,userId,turno);
+            }
+            if(i === 4){
+                iniciarPartida(gameId);   
             }
         },
         error: (jqXHR, status, errorThrown)=>{
@@ -166,22 +176,23 @@ function actualizarInformacionPartida(gameId){
     });
 };
 
-function crearFilaTablaJugadores(nombre,numero,cartas,gameId){
+function crearFilaTablaJugadores(nombre,numero,nrCartas,gameId,userId, turno){
     let fila = $("<tr>");
     fila.append($("<th>").attr("scope","row").text(numero));
-    fila.append($("<td>").attr("id","idJugador").text(nombre));
-    fila.append($("<td>").attr("id","nrCartasJugador").text(cartas));
+    fila.append($("<td>").attr("id",userId).text(nombre));
+    if(nrCartas > 0)
+        fila.append($("<td>").attr("id","nrCartasJugador"+userId).text(nrCartas));
+    else
+        fila.append($("<td>").attr("id","nrCartasJugador"+userId).text("-"));
     $("#tablaJugadores").append(fila);
-    if(numero === 4){
-        iniciarPartida(gameId);
-        //Inicializa la columna del nr de cartas de cada jugador
-        $('#tablaJugadores tr').each(function(){
-            let celdas = $(this).find('#nrCartasJugador');
-            celdas.each(function(){
-                $(this).text("13");
-            });
-        });
-    }
+   // $("#tablaJugadores").children().children();
+   if(turno){
+        let ss = $("#tablaJugadores").find("tbody").find("tr").find("td");
+
+        console.log(ss);
+   //     .css('background-color', 'green')
+   }
+  //  console.log();
 };
 
 function pestañaMisPartidas(){
@@ -240,9 +251,6 @@ function unirsePartida(){
             nombrePartida = data.nombrePartida;
             $("#gameId").text(gameId);
             crearPestaña(nombrePartida,gameId);
-          /*  if(data.iniciarPartida){
-                iniciarPartida(ga);
-            }*/
         },
         error: (jqXHR, status, errorThrown)=>{
             alert("Error en entrar a la partida " + nombrePartida + " " + errorThrown);
@@ -253,6 +261,7 @@ function unirsePartida(){
 function iniciarPartida(gameId){
     $("#esperandoJugadores").hide();
     mostrarCartas(gameId);
+    $('')
 };
 
 function mostrarCartas(gameId){
