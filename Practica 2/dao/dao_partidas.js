@@ -55,7 +55,6 @@ class DAOPartidas {
                         resultado.idJugadorAnterior = gameInfo.idJugadorAnterior;
                         if(gameInfo.idJugadorActual === userId){
                             resultado.turno = true;
-                            console.log(userId);
                         }
                        
 
