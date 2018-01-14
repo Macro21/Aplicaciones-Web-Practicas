@@ -178,21 +178,18 @@ function actualizarInformacionPartida(gameId){
 
 function crearFilaTablaJugadores(nombre,numero,nrCartas,gameId,userId, turno){
     let fila = $("<tr>");
-    fila.append($("<th>").attr("scope","row").text(numero));
-    fila.append($("<td>").attr("id",userId).text(nombre));
+    let color = "white";
+    if(turno){
+        color = "green";
+    }
+    fila.append($("<th>").attr("scope","row").text(numero).css("background-color",color));
+    fila.append($("<td>").attr("id",userId).text(nombre).css("background-color",color));
     if(nrCartas > 0)
-        fila.append($("<td>").attr("id","nrCartasJugador"+userId).text(nrCartas));
+        fila.append($("<td>").attr("id","nrCartasJugador"+userId).text(nrCartas).css("background-color",color));
     else
         fila.append($("<td>").attr("id","nrCartasJugador"+userId).text("-"));
-    $("#tablaJugadores").append(fila);
-   // $("#tablaJugadores").children().children();
-   if(turno){
-        let ss = $("#tablaJugadores").find("tbody").find("tr").find("td");
+   $("#tablaJugadores").append(fila);
 
-        console.log(ss);
-   //     .css('background-color', 'green')
-   }
-  //  console.log();
 };
 
 function pestañaMisPartidas(){
