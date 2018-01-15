@@ -268,7 +268,7 @@ function iniciarPartida(gameId, request, response, infoGame){
     });
 };
 
-app.get("/logout",(request,response)=>{
+app.get("/logout",passport.authenticate('basic', {session: false}),(request,response)=>{
     request.logout();
     response.json({});
 });
