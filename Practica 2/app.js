@@ -268,6 +268,52 @@ function iniciarPartida(gameId, request, response, infoGame){
     });
 };
 
+app.post("/accion",passport.authenticate('basic', {session: false}),(request,response)=>{
+  /* let datos=request.body.datos;
+    //Cojo el estado anterior de la partida y lo actualizo.
+    daoPartida.getPlayersInGame(request.user.id, datos.gameId, (err,infoPlayersInGame)=>{
+        if(err){
+            response.status(500);
+            response.json({});
+            console.log(err);
+        }
+        //NUEVOS DATOS
+        if(datos.accion === "jugar"){ // accion === jugar
+            //Distingo entre si es primera mano o no
+            if(datos.cartasInicio !== undefined){//primera mano
+                
+            }
+            else{
+                //Actualizar nr cartas de mesa y jugador, actualizar cartas en mesa y jugador y pasar turno
+                let gameInfo = {
+                    playerInfo: playersInfo,
+                    nrCartasEnMesa: 0,
+                    valorCartasEnMesa: [],
+                    idJugadorActual: -1, // es el id del jugador que tiene que empezar
+                    idJugadorAnterior: -1
+                };
+                infoPlayersInGame.
+
+                gameInfo.playerInfo = playersInfo;
+                // Despues de mezclar los objetos del array, me quedo con el id del jugador primero para que empiece la partida
+                infoPlayersInGame.infoPartida = underscore.shuffle(infoPlayersInGame.infoPartida);
+                gameInfo.idJugadorActual = infoPlayersInGame.infoPartida[0].id; 
+            }
+        }
+        else{ //accion===mentiroso
+    
+        }
+        //UPDATE DEL ESTADO
+        daoPartida.stateUpdate(gameId, JSON.stringify(gameInfo), (err)=>{
+            if(err){
+                response.status(500);
+                console.log(err);
+            }
+            response.status(200);
+            response.json({nombrePartida: infoGame[0].nombre});
+        }); 
+    });*/
+});
 app.get("/logout",(request,response)=>{
     request.logout();
     response.json({});

@@ -180,7 +180,7 @@ function crearFilaTablaJugadores(nombre,numero,nrCartas,gameId,userId, turno){
     let fila = $("<tr>");
     let color = "white";
     if(turno){
-        color = "green";
+        color = "#75EED8";
     }
     fila.append($("<th>").attr("scope","row").text(numero).css("background-color",color));
     fila.append($("<td>").attr("id",userId).text(nombre).css("background-color",color));
@@ -261,8 +261,7 @@ function iniciarPartida(gameId){
    
 };
 
-function mostrarCartas(gameId){
-    
+function mostrarCartas(gameId){  
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
@@ -278,6 +277,13 @@ function mostrarCartas(gameId){
             mostrarMano(data.gameInfo.cartas,data.gameInfo.turno);
             if(!data.gameInfo.turno){
                 $('#botonesAccion').hide();
+                $("#noTurno").show();
+            }
+            else{
+                $("#noTurno").hide();
+                if(data.gameInfo.idJugadorAnterior !== -1){//No es el primer turno, por tanto muestro el text para introducir valor
+                    $("#cartasInicio").hide();
+                }
             }
         },
         error: (jqXHR, status, errorThrown)=>{
@@ -294,6 +300,7 @@ function mostrarMano(cartas, turno){
         imagen.attr("src","images/"+ carta + ".png");
         imagen.css("padding","1rem");
         imagen.css("opacity","0.5")
+        imagen.attr("carta", carta);
         $("#cartas").prepend(imagen);
     }
     let lista = document.getElementById("cartas");
@@ -309,18 +316,49 @@ function mostrarMano(cartas, turno){
     }
 };
 
-function mostrarAccion(accion){
-
-};
-
 function seleccionar(){
-    let lista = document.getElementsByClassName("selected");
-    for (let i = 0; i <lista.length; i++) {
-        console.log(lista[i].getAttribute("src"));
+    let cartas = document.getElementsByClassName("selected");
+    let parseadas = [];
+    for (let i = 0; i <cartas.length; i++) {   
+        parseadas =cartas[i].getAttribute("carta");
+        console.log(parseadas[0]);
     }
-    
+    realizarAccion("jugar", parseadas);
 };
-
+// Si la accion es jugar, entonces el usuario ha elegido echar cartas,
+// Si la accion es mentiroso, el usuario ha decidido levantar las cartas del anterior.
+function realizarAccion(accion, parseadas){ 
+    let user = $("#email").prop("value");
+    let password = $("#password").prop("value");
+    let cadenaBase64 = btoa(user + ":" + password);
+    let gameId = $("#menu > li.active").attr("data-game-id");
+    let cartasInicio= $("#cartasInicio").prop("value");
+    if(cartasInicio ==="Introduce el supuesto valor de las cartas"){
+        cartasInicio=undefined;
+    }
+    let datos = {
+        gameId: gameId,
+        accion: accion,
+        parseadas:parseadas,
+        cartasInicio:cartasInicio
+    };
+    $.ajax({
+        method: "POST",
+        url: "/accion",
+        contentType: "application/json",
+        data: JSON.stringify({datos}),
+        beforeSend: (req)=> {
+            // Añadimos la cabecera 'Authorization' con los datos de autenticación.
+            req.setRequestHeader("Authorization","Basic " + cadenaBase64);
+        },
+        success: function(data, state, jqXHR) {
+            //ActualizarInfo Partida.
+        },
+        error: function (jqXHR, status, errorThrown){
+            alert("Ha ocurrido un error" + errorThrown);
+        }      
+    });
+}
 function desconectar(){
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
