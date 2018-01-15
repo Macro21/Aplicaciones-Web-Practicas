@@ -33,13 +33,6 @@ class DAOPartidas {
                         connection.release();
                     }
                     let estado = JSON.parse(rows[0].estado);
-                    let infoJugadorActual=estado.jugadoresCartas;
-                    for(let player of infoJugadorActual){
-                        let id=player.idJugador;
-                        if(id===userId){
-                            estado.jugadoresCartas=player;
-                        }
-                    }
                     if(estado.idTurno===userId)
                         estado.turno=true;
                     callback(null,estado);

@@ -270,7 +270,10 @@ function mostrarCartas(gameId){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
-            //Busco mi posición en la tabla para que me muestre mis cartas:
+            console.log(data.gameInfo.mesaInfo);
+            if(data.gameInfo.mesaInfo.nrCartas>0){
+                mostrarMesa(data.gameInfo.mesaInfo);
+            }  
             mostrarMano(data.gameInfo.jugadoresCartas.cartas,data.gameInfo.turno);
             if(!data.gameInfo.turno){
                 $('#botonesAccion').hide();
@@ -278,8 +281,15 @@ function mostrarCartas(gameId){
             }
             else{
                 $("#noTurno").hide();
-                if(data.gameInfo.idTurnoAnterior !== -1){//No es el primer turno, por tanto muestro el text para introducir valor
+                $('#botonesAccion').show();
+                console.log(data.gameInfo.mesaInfo.nrCartas)
+                if(data.gameInfo.mesaInfo.nrCartas === 0){//Es el primer turno, por tanto muestro el text para introducir valor
+                    $("#cartasInicio").show();
+                    $("#mentiroso").hide();
+                }
+                else{
                     $("#cartasInicio").hide();
+                    $("#mentiroso").show();
                 }
             }
         },
@@ -288,7 +298,13 @@ function mostrarCartas(gameId){
         },
     });
 };
-
+function mostrarMesa(mesaInfo){
+    let string = "";
+    for(let i=0;i<mesaInfo.nrCartas;i++){
+        string+= mesaInfo.supuestoValor+"  ";
+    }
+    $("#mesa").text("Hay "+mesaInfo.nrCartas+" "+mesaInfo.supuestoValor+"´s:  " +"\n\r"+string);
+}
 function mostrarMano(cartas, turno){
     $("#cartas").empty();//Vaciamos el tablero para no añadir dos veces las mismas cartas
     //Añadimos las cartas
@@ -314,17 +330,16 @@ function mostrarMano(cartas, turno){
 };
 
 function seleccionar(){
-    let cartas = document.getElementsByClassName("selected");
-    let parseadas = [];
-    for (let i = 0; i <cartas.length; i++) {   
-        parseadas =cartas[i].getAttribute("carta");
-        console.log(parseadas[0]);
+    let seleccionadas = document.getElementsByClassName("selected");
+    let cartas =[];
+    for (let i = 0; i <seleccionadas.length; i++) {   
+        cartas[i] =seleccionadas[i].getAttribute("carta");
     }
-    realizarAccion("jugar", parseadas);
+    realizarAccion("jugar", cartas);
 };
 // Si la accion es jugar, entonces el usuario ha elegido echar cartas,
 // Si la accion es mentiroso, el usuario ha decidido levantar las cartas del anterior.
-function realizarAccion(accion, parseadas){ 
+function realizarAccion(accion, cartas){ 
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
@@ -336,7 +351,7 @@ function realizarAccion(accion, parseadas){
     let datos = {
         gameId: gameId,
         accion: accion,
-        parseadas:parseadas,
+        cartas:cartas,
         cartasInicio:cartasInicio
     };
     $.ajax({
@@ -349,7 +364,15 @@ function realizarAccion(accion, parseadas){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: function(data, state, jqXHR) {
-            //ActualizarInfo Partida.
+            if(accion==="mentiroso"){ //Mostrar mensaje con resultado de si ha mentido o no
+                if(data.mentiroso){
+                    alert(user+" tenía razón, el jugador anterior había mentido y se lleva las cartas de la mesa.");
+                }
+                else{
+                    alert("El jugador anterior decía la verdad. "+user +" se lleva las cartas de la mesa.");
+                }
+            }
+            actualizarInformacionPartida(gameId);
         },
         error: function (jqXHR, status, errorThrown){
             alert("Ha ocurrido un error" + errorThrown);

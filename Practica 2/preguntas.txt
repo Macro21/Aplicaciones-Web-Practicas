@@ -1,2 +1,2 @@
-Mirar al desconectar fallo al poner otro user (sale la vista del user anterior y peta).
 Crear botón para deseleccionar.
+Crear validador al introducir por primera vez el valor.
