@@ -42,6 +42,7 @@ function mostrarPanelPrincipal(user){
     $("#portada").hide();
     cargarMenu();
     $("#pestañas").show();
+    $("#pestañaPartidas").show();
     $(".pestañaPartidaEnCurso").hide();
     $("#nombreUsuario").text(user);
 };
@@ -145,24 +146,22 @@ function actualizarInformacionPartida(gameId){
     let cadenaBase64 = btoa(user + ":" + password);
 
     let nombrePartida = $("[data-game-id=\""+ gameId+"\"]").text();
-
     $.ajax({ //Busco jugadores y actualizo la tabla
         method: "GET",
         url: "/gameState/" + gameId,
-
         beforeSend: (req)=> {
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
             $("#tablaJugadores").empty();
-            for(i=0; i<data.gameInfo.infoPartida.length; i++){
-                let turno = false;
-                let nombre = data.gameInfo.infoPartida[i].login;
-                let nrCartas = data.gameInfo.nrCartas;
-                let userId = data.gameInfo.infoPartida[i].id;
-                if(data.gameInfo.idJugadorActual === userId){
-                    turno = true;
+            for(i=0;i<data.gameInfo.jugadoresInfo.length; i++){
+                let turno = false;     
+                let nombre = data.gameInfo.jugadoresInfo[i].nombre;
+                let userId = data.gameInfo.jugadoresInfo[i].idJugador;
+                let nrCartas = data.gameInfo.jugadoresInfo[i].nrCartas;
+                if(data.gameInfo.idTurno === userId){
+                    turno=true;
                 }
                 crearFilaTablaJugadores(nombre,i+1,nrCartas,gameId,userId,turno);
             }
@@ -210,7 +209,7 @@ function crearPartida(){
         method: "POST",
         url: "/newGame",
         contentType: "application/json",
-        data: JSON.stringify({nombrePartida}),
+        data: JSON.stringify({nombrePartida,user}),
         beforeSend: (req)=> {
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
@@ -230,16 +229,13 @@ function unirsePartida(){
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
-
     let gameId = $("#up").prop("value");
-    
     let nombrePartida;
-
     $.ajax({//Incorporación a una partida. 
         method: "POST",
         url: "/joinGame",
         contentType: "application/json",
-        data: JSON.stringify({gameId: gameId}),
+        data: JSON.stringify({gameId: gameId, user}),
         beforeSend: (req)=> {
             // Añadimos la cabecera 'Authorization' con los datos de autenticación.
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
@@ -274,14 +270,15 @@ function mostrarCartas(gameId){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
-            mostrarMano(data.gameInfo.cartas,data.gameInfo.turno);
+            //Busco mi posición en la tabla para que me muestre mis cartas:
+            mostrarMano(data.gameInfo.jugadoresCartas.cartas,data.gameInfo.turno);
             if(!data.gameInfo.turno){
                 $('#botonesAccion').hide();
                 $("#noTurno").show();
             }
             else{
                 $("#noTurno").hide();
-                if(data.gameInfo.idJugadorAnterior !== -1){//No es el primer turno, por tanto muestro el text para introducir valor
+                if(data.gameInfo.idTurnoAnterior !== -1){//No es el primer turno, por tanto muestro el text para introducir valor
                     $("#cartasInicio").hide();
                 }
             }
@@ -371,7 +368,8 @@ function desconectar(){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR)=>{
-            $("#portada").show();~
+            $("#portada").show();
+            $("#menu").children().empty();
             $("#menu").empty();
             $("#pestañas").hide();
             
