@@ -135,9 +135,10 @@ app.get("/gameState/:gameId",passport.authenticate('basic', {session: false}),(r
             for(let player of infoJugadorActual){
                 let id=player.idJugador;
                 if(id===request.user.id){
-                    result.jugadoresCartas=player;
+                    result.jugadoresCartas=player; //solo le devuelvo al cliente sus cartas
                 }
             }
+            result.mesaInfo.cartas=[]; //no le devuelvo al cliente las cartas de la mesa
             response.json({gameInfo: result});
         }
     });
