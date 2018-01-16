@@ -102,18 +102,6 @@ app.post("/newUser", (request, response) => {
     });
 });
 
-/*app.get("/games/:idUser",passport.authenticate('basic', {session: false}),(request,response)=>{
-    
-    daoUsuario.getGamesByUser(request.params.idUser, (err,result)=>{
-        if(err){
-            response.status(500);
-        }
-        response.status(200);
-        response.json({result});
-        console.log(result);
-    });
-});*/
-
 app.get("/userGames",passport.authenticate('basic', {session: false}), (request, response) =>{
     
     daoUsuario.getGamesByUser(request.user.id, (err,result)=>{
@@ -333,7 +321,6 @@ function iniciarPartida(gameId, request, response, infoGame){
         estado.idTurno=jugadoresInfo[0].idJugador;
         
         //Meterlas en la bd en estatus
-        console.log(estado);
         daoPartida.stateUpdate(gameId, JSON.stringify(estado), (err)=>{
             if(err){
                 response.status(500);
@@ -354,6 +341,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
             console.log(err);
         }
         let mentiroso=false; //lo delcaro aquí para despues enviar mensaje confirmando si mentia o no
+        let idTurnoAnteriorBD = estado.idTurnoAnterior;//Turno anterior de bd para ver si ha ganado o no
         if(datos.accion==="jugar"){ //Actualizo el estado
             let pos = -1;
             for(let i=0;i<estado.jugadoresInfo.length;i++){
@@ -403,7 +391,12 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
             let parseadas = [];
             for (let i = 0; i <estado.cartasUltimoJugador.length; i++) {   
                 let carta =estado.cartasUltimoJugador[i];
-                parseadas[i]=carta[0];
+                if(carta[1]==="0"){ //Único caso en el que hay que coger 2 pos, no solo la primera
+                    parseadas[i]=carta.slice(0,2);
+                }
+                else{
+                    parseadas[i]=carta[0];
+                }
             }
             while(i<parseadas.length && !mentiroso){
                 if(parseadas[i]!==estado.mesaInfo.supuestoValor){
@@ -420,7 +413,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
                         i= estado.jugadoresInfo.length;//Para salir del bucle
                     }
                 }
-                
+                estado.idTurnoAnterior = estado.idTurnoAnterior; //Se mantiene el mismo
             }
             else{
                  //Al decir la verdad el usuario que ha levantado se lleva las cartas, por tanto busco por user.id
@@ -430,10 +423,11 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
                         i= estado.jugadoresInfo.length; //Para salir del bucle
                     }
                 }
+                estado.idTurnoAnterior = request.user.id; //Al decir la verdad, el turno me salta y yo soy el anterior.
             }
             let turnoSiguiente=(pos+1)%4;//el turno es del siguiente al que recoge las cartas
             estado.idTurno= estado.jugadoresInfo[turnoSiguiente].idJugador; 
-            estado.idTurnoAnterior = request.user.id; //Se mantiene el mismo
+            
             //Sumo cartas al jugador
             for(let i=0;i<estado.mesaInfo.cartas.length;i++){
                 estado.jugadoresCartas[pos].cartas.push(estado.mesaInfo.cartas[i]);
@@ -447,6 +441,23 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
             estado.cartasUltimoJugador= [];
             estado.turno=false;
         }
+        //COMPROBAR SI ALGUIEN HA GANADO
+        //busco el del turno anterior en jugadoresInfo para ver su nrCartas
+        let pos = 0;
+        for(let i=0;i<estado.jugadoresInfo.length;i++){
+            if(estado.jugadoresInfo[i].idJugador===idTurnoAnteriorBD){
+                pos=i;
+                i= estado.jugadoresInfo.length; //Para salir del bucle
+            }
+        }
+        //Comprobar NrCartas
+        if(estado.jugadoresInfo[pos].nrCartas === 0){//posible ganador 
+                if(datos.accion === "jugar" || (datos.accion ==="mentiroso" && !mentiroso)){ //si el siguiente jugador decide no levantar o levanta y era verdad
+                    estado.partidaFinalizada=true;
+                    estado.ganador=estado.jugadoresInfo[pos];
+                }
+        }
+
         daoPartida.stateUpdate(datos.gameId, JSON.stringify(estado), (err)=>{
             if(err){
                 response.status(500);

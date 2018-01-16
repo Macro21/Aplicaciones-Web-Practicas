@@ -139,7 +139,12 @@ function activarPestañaPulsada(){
 
 function actualizarInformacionPartida(gameId){
     let i;
+    $("#partidaFinalizada").hide();
+    $("#esperandoJugadores").show();
     $("#partidaEnCursoId").text(gameId);
+    $("#cartas").hide();
+    $("#botonesAccion").hide();
+    $("#noTurno").hide();
 
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
@@ -166,7 +171,12 @@ function actualizarInformacionPartida(gameId){
                 crearFilaTablaJugadores(nombre,i+1,nrCartas,gameId,userId,turno);
             }
             if(i === 4){
-                iniciarPartida(gameId);   
+                if(data.gameInfo.partidaFinalizada===true){
+                    partidaFinalizada(gameId, data.gameInfo.ganador);
+                }
+                else{
+                    ejecutarPartida(gameId);    
+                }
             }
         },
         error: (jqXHR, status, errorThrown)=>{
@@ -251,13 +261,13 @@ function unirsePartida(){
     });
 };
 
-function iniciarPartida(gameId){
+function ejecutarPartida(gameId){
     $("#esperandoJugadores").hide();
-    mostrarCartas(gameId);
-   
+    mostrarCartas(gameId);  
 };
 
-function mostrarCartas(gameId){  
+function mostrarCartas(gameId){ 
+    $("#cartas").show(); 
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
@@ -270,10 +280,7 @@ function mostrarCartas(gameId){
             req.setRequestHeader("Authorization","Basic " + cadenaBase64);
         },
         success: (data,status,jqXHR) =>{
-            console.log(data.gameInfo.mesaInfo);
-            if(data.gameInfo.mesaInfo.nrCartas>0){
-                mostrarMesa(data.gameInfo.mesaInfo);
-            }  
+            mostrarMesa(data.gameInfo.mesaInfo);
             mostrarMano(data.gameInfo.jugadoresCartas.cartas,data.gameInfo.turno);
             if(!data.gameInfo.turno){
                 $('#botonesAccion').hide();
@@ -282,7 +289,6 @@ function mostrarCartas(gameId){
             else{
                 $("#noTurno").hide();
                 $('#botonesAccion').show();
-                console.log(data.gameInfo.mesaInfo.nrCartas)
                 if(data.gameInfo.mesaInfo.nrCartas === 0){//Es el primer turno, por tanto muestro el text para introducir valor
                     $("#cartasInicio").show();
                     $("#mentiroso").hide();
@@ -303,7 +309,13 @@ function mostrarMesa(mesaInfo){
     for(let i=0;i<mesaInfo.nrCartas;i++){
         string+= mesaInfo.supuestoValor+"  ";
     }
-    $("#mesa").text("Hay "+mesaInfo.nrCartas+" "+mesaInfo.supuestoValor+"´s:  " +"\n\r"+string);
+    if(mesaInfo.nrCartas>0){
+        $("#mesa").show();
+        $("#mesa").text("Hay "+mesaInfo.nrCartas+" "+mesaInfo.supuestoValor+"´s:  " +"\n\r"+string);
+    }
+    else{
+        $("#mesa").hide();
+    }
 }
 function mostrarMano(cartas, turno){
     $("#cartas").empty();//Vaciamos el tablero para no añadir dos veces las mismas cartas
@@ -369,7 +381,7 @@ function realizarAccion(accion, cartas){
                     alert(user+" tenía razón, el jugador anterior había mentido y se lleva las cartas de la mesa.");
                 }
                 else{
-                    alert("El jugador anterior decía la verdad. "+user +" se lleva las cartas de la mesa.");
+                    alert("El jugador anterior decía la verdad, "+user +" se lleva las cartas de la mesa.");
                 }
             }
             actualizarInformacionPartida(gameId);
@@ -378,6 +390,14 @@ function realizarAccion(accion, cartas){
             alert("Ha ocurrido un error" + errorThrown);
         }      
     });
+}
+function partidaFinalizada(gameId,ganador){
+    $("#partidaFinalizada").show();
+    $("#partidaFinalizada").text("PARTIDA FINALIZADA. Ha ganado la partida: " +ganador.nombre);
+    $("#botonesAccion").hide();
+    $("#noTurno").hide();
+    $("#cartas").hide();
+    $("#esperandoJugadores").hide();
 }
 function desconectar(){
     let user = $("#email").prop("value");

@@ -1,2 +1,3 @@
-Crear botón para deseleccionar.
+Crear botón para deseleccionar?
 Crear validador al introducir por primera vez el valor.
+Controlar cuando se ponen jugar cartas seleccionadas y no se selecciona nada.
