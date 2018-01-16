@@ -145,6 +145,7 @@ function actualizarInformacionPartida(gameId){
     $("#cartas").hide();
     $("#botonesAccion").hide();
     $("#noTurno").hide();
+    $("#mesa").hide();
 
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");
@@ -161,7 +162,8 @@ function actualizarInformacionPartida(gameId){
         success: (data,status,jqXHR) =>{
             $("#tablaJugadores").empty();
             for(i=0;i<data.gameInfo.jugadoresInfo.length; i++){
-                let turno = false;     
+                let turno = false;  
+                let ganador = false;     
                 let nombre = data.gameInfo.jugadoresInfo[i].nombre;
                 let userId = data.gameInfo.jugadoresInfo[i].idJugador;
                 let nrCartas = data.gameInfo.jugadoresInfo[i].nrCartas;
@@ -324,7 +326,9 @@ function mostrarMano(cartas, turno){
         let imagen = $("<img>");
         imagen.attr("src","images/"+ carta + ".png");
         imagen.css("padding","1rem");
-        imagen.css("opacity","0.5")
+        if(turno){
+            imagen.css("opacity","0.5")
+        }
         imagen.attr("carta", carta);
         $("#cartas").prepend(imagen);
     }
@@ -333,7 +337,7 @@ function mostrarMano(cartas, turno){
     if(turno){
         for (let i = 0; i <elems.length; i++) {
             elems[i].addEventListener("click", function(){
-               // $( this ).css("width","20%");
+                $( this ).css("width","20%");
                 $( this ).css("opacity","1");
                 this.className = "selected";
             });
