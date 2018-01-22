@@ -24,7 +24,7 @@ app.get("/", function(request, response) {
 app.get("/showPlaylist", function(request, response) {
     //
     // Implementa aquí el apartado 1.b
-    //
+    
 });
 
 

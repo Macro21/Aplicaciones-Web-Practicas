@@ -26,7 +26,6 @@ function getPlaylist(callback) {
         (err,rows)=>{
             if(err){
                 console.log(err);
-                connection.release();
                 callback(err);
             }
             else{
@@ -41,10 +40,20 @@ function getPlaylist(callback) {
  */
 function insertInPlaylist(title, author, album, year, callback) {
     var connection = createConnection();
-
-    //
+    let sql = "insert into playlist (title,author,album,year) values (?,?,?,?)"
     // Completa aquí el apartado 1.b
-    //
+    connection.query(sql,
+        [title,author,album,year],
+        (err,rows)=>{
+            if(err){
+                console.log(err);
+                callback(err);
+            }
+            else{
+                callback(null,true);
+            }
+        }
+    );
 }
 
 module.exports = {
