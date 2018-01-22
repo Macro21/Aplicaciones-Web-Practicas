@@ -9,7 +9,7 @@ function createConnection() {
         host: "localhost",
         database: "examen_septiembre",
         user: "root",
-        password: ""
+        password: "PEPE"
     });
 }
 
@@ -21,7 +21,19 @@ function getPlaylist(callback) {
 
     //
     // Completa aquí el apartado 1.a
-    //
+    let sql = "select * from playlist";
+    connection.query(sql,
+        (err,rows)=>{
+            if(err){
+                console.log(err);
+                connection.release();
+                callback(err);
+            }
+            else{
+                callback(null,rows);
+            }
+        }
+    );
 }
 
 /**
