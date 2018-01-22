@@ -465,6 +465,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
         }); 
     });  
 });
+
 app.get("/logout",passport.authenticate('basic', {session: false}),(request,response)=>{
     request.logout();
     response.json({});
