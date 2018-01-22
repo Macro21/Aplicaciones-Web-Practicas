@@ -1,0 +1,24 @@
+{
+  "name": "ExamenFebrero",
+  "description": "Examen de febrero de aplicaciones web",
+  "version": "1.0.0",
+  "keywords": [
+    "examen",
+    "aplicaciones web"
+  ],
+  "author": "manuel",
+  "contributors": [],
+  "private": true,
+  "license": "SEE LICENSE IN Nothing",
+  "dependencies": {
+    "mysql": "^2.13.0",
+    "nodemon": "^1.11.0",
+    "underscore": "^1.8.3",
+    "body-parser": "^1.16.0",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.5",
+    "express": "^4.14.1",
+    "express-session": "^1.15.0",
+    "express-validator": "^3.1.2"
+  }
+}

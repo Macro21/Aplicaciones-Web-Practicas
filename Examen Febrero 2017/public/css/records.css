@@ -1,0 +1,33 @@
+body {
+    font-family: sans-serif;
+    background-color: #ffffcc;
+}
+
+h1 {
+    background-color: #993300;
+    color: white;
+    text-align: center;
+    
+}
+
+#records {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#records th {
+    border: 1px solid black;
+    padding: 5px;
+    background-color: antiquewhite;
+}
+
+#records td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: center;
+    background-color: burlywood;
+}
+
+div.formulario {
+    margin-top: 20px;
+}

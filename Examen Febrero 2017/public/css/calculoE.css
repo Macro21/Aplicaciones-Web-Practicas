@@ -1,0 +1,18 @@
+body {
+    font-family: sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: blue;
+}
+
+div.formulario {
+    padding: 10px;
+}
+
+div.error {
+    background-color: #ffeeee;
+    border: 1px solid red;
+    padding: 10px;
+}

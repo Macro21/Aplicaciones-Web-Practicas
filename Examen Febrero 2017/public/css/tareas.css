@@ -1,0 +1,60 @@
+body {
+    font-family: sans-serif;
+    background-color: #996600;
+}
+
+
+h1 {
+    text-align: center;
+    color: white;
+}
+
+ul.listaTareas {
+    list-style-type: none;
+    padding: 0px;
+}
+
+ul.listaTareas > li {
+    display: block;
+    border: 1px solid black;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #ffff99;
+}
+
+ul.listaTareas .finalizada {
+    text-decoration: line-through;
+    color: dimgray;
+}
+
+ul.listaTareas .botonfinalizada {
+    float: right;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    background: #0000cc;
+    padding: 3px 10px;
+}
+
+ul.listaTareas .botonfinalizada:hover {
+    background: #9999ff;
+    color: black;
+}
+
+.nuevaTarea {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    background-color: bisque;
+    border: 2px solid black;
+}
+
+.numTareas {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Gestor de tareas</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/tareas.css">
+    </head>
+    <body>
+        <h1>Lista de tareas</h1>
+        
+        
+        <div class="numTareas">
+            Número de tareas pendientes: <%= numTareas %>
+        </div>
+        
+        
+        <ul class="listaTareas">
+                <% if (datos) { %>
+                    <% for(let dato of datos){ %>
+                        <li>
+                            <% if (dato.finalizada) { %>
+                                <span class = "finalizada"> <%= dato.texto %> </span>
+                        <%  } else { %>
+                            <span> <%= dato.texto %> </span>
+                            <a class="botonfinalizada" href="/finalizarTarea?nuevaTarea=<%= dato.id %>" >Marcar como finalizada</a>
+                        <% } %>
+                        </li>
+                   <%  } %>
+                <% } %> 
+        </ul>
+        
+        <div class="nuevaTarea">
+            <form action="/anyadirTarea" method="POST">
+                <label for="nuevaTarea">Nueva tarea: </label>
+                <input type="text" name="nuevaTarea" id="nuevaTarea"> 
+                <input type="submit" value="Enviar">
+            </form>
+        </div>
+    </body>
+</html>
