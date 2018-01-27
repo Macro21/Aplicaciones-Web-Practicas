@@ -307,13 +307,23 @@ function mostrarCartas(gameId){
     });
 };
 function mostrarMesa(mesaInfo){
-    let string = "";
-    for(let i=0;i<mesaInfo.nrCartas;i++){
-        string+= mesaInfo.supuestoValor+"  ";
-    }
+   // let string = "";
+    
     if(mesaInfo.nrCartas>0){
         $("#mesa").show();
-        $("#mesa").text("Hay "+mesaInfo.nrCartas+" "+mesaInfo.supuestoValor+"´s:  " +"\n\r"+string);
+        $("#mesa").empty();
+        for(let i=0;i<mesaInfo.nrCartas;i++){
+            let aleato = ["C","D","H","S"];
+            let n = Math.round(Math.random() * (0 - 3) + 3);      
+            let imagen = $("<img>");
+
+            imagen.attr("src","images/"+ mesaInfo.supuestoValor + "_" + aleato[n] + ".png");
+            imagen.css("padding","0.3rem");
+            imagen.css("margin","0.2rem");
+            imagen.attr("carta", mesaInfo.supuestoValor + "_" + aleato[n]);
+            $("#mesa").prepend(imagen);
+        }
+   //   $("#mesa").text("Hay "+mesaInfo.nrCartas+" "+mesaInfo.supuestoValor+"´s:  " +"\n\r"+string);
     }
     else{
         $("#mesa").hide();
