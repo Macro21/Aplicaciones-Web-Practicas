@@ -320,6 +320,7 @@ function mostrarMesa(mesaInfo){
             imagen.attr("src","images/"+ mesaInfo.supuestoValor + "_" + aleato[n] + ".png");
             imagen.css("padding","0.3rem");
             imagen.css("margin","0.2rem");
+            imagen.css("width","10%");
             imagen.attr("carta", mesaInfo.supuestoValor + "_" + aleato[n]);
             $("#mesa").prepend(imagen);
         }
