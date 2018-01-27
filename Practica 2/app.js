@@ -343,47 +343,54 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
         }
         let mentiroso=false; //lo delcaro aquí para despues enviar mensaje confirmando si mentia o no
         let idTurnoAnteriorBD = estado.idTurnoAnterior;//Turno anterior de bd para ver si ha ganado o no
+        let nrCartasJugadas = true;
+        
         if(datos.accion==="jugar"){ //Actualizo el estado
-            let pos = -1;
-            for(let i=0;i<estado.jugadoresInfo.length;i++){
-                if(estado.jugadoresInfo[i].idJugador===request.user.id){
-                    pos=i;
-                    i= estado.jugadoresInfo.length;//Para salir del bucle
-                }
+            if(datos.cartas.length > 3 || datos.cartas.length <= 0){
+                nrCartasJugadas = false;
             }
-            let turnoSiguiente=(pos+1)%4;
-            estado.idTurno= estado.jugadoresInfo[turnoSiguiente].idJugador;
-            estado.idTurnoAnterior = request.user.id;
-            if(datos.cartasInicio!== undefined){
-                estado.mesaInfo.supuestoValor = datos.cartasInicio;
-            }
-            estado.mesaInfo.nrCartas +=datos.cartas.length;
-            //Sumo cartas a la mesa
-            for(let i=0;i<datos.cartas.length;i++){
-                estado.mesaInfo.cartas.push(datos.cartas[i]);
-            }
-            //Meto cartas en atributo cartasUltimoJugador
-            estado.cartasUltimoJugador= datos.cartas;
-            //Resto cartas de la mano del jugador
-            let cartasFinal=[];
-            let distinta;
-            let j=0;
-            for(let i=0;i<estado.jugadoresCartas[pos].cartas.length;i++){
-                distinta=true;
-                j=0;
-                while(j<datos.cartas.length && distinta){
-                    if(datos.cartas[j]===estado.jugadoresCartas[pos].cartas[i]){
-                        distinta=false;
+            else{
+                let pos = -1;
+                for(let i=0;i<estado.jugadoresInfo.length;i++){
+                    if(estado.jugadoresInfo[i].idJugador===request.user.id){
+                        pos=i;
+                        i= estado.jugadoresInfo.length;//Para salir del bucle
                     }
-                    j++;
                 }
-                if(distinta){
-                    cartasFinal.push(estado.jugadoresCartas[pos].cartas[i]);
+                let turnoSiguiente=(pos+1)%4;
+                estado.idTurno= estado.jugadoresInfo[turnoSiguiente].idJugador;
+                estado.idTurnoAnterior = request.user.id;
+                if(datos.cartasInicio!== undefined){
+                    estado.mesaInfo.supuestoValor = datos.cartasInicio;
                 }
+                estado.mesaInfo.nrCartas +=datos.cartas.length;
+                //Sumo cartas a la mesa
+                for(let i=0;i<datos.cartas.length;i++){
+                    estado.mesaInfo.cartas.push(datos.cartas[i]);
+                }
+                //Meto cartas en atributo cartasUltimoJugador
+                estado.cartasUltimoJugador= datos.cartas;
+                //Resto cartas de la mano del jugador
+                let cartasFinal=[];
+                let distinta;
+                let j=0;
+                for(let i=0;i<estado.jugadoresCartas[pos].cartas.length;i++){
+                    distinta=true;
+                    j=0;
+                    while(j<datos.cartas.length && distinta){
+                        if(datos.cartas[j]===estado.jugadoresCartas[pos].cartas[i]){
+                            distinta=false;
+                        }
+                        j++;
+                    }
+                    if(distinta){
+                        cartasFinal.push(estado.jugadoresCartas[pos].cartas[i]);
+                    }
+                }
+                estado.jugadoresCartas[pos].cartas= cartasFinal;
+                estado.jugadoresInfo[pos].nrCartas=cartasFinal.length;
+                estado.turno=false;
             }
-            estado.jugadoresCartas[pos].cartas= cartasFinal;
-            estado.jugadoresInfo[pos].nrCartas=cartasFinal.length;
-            estado.turno=false;
         }
         else{ //Accion == mentiroso
             //Hay que averiguar si miente el jugador anterior. 
@@ -417,8 +424,8 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
                 estado.idTurnoAnterior = estado.idTurnoAnterior; //Se mantiene el mismo
             }
             else{
-                 //Al decir la verdad el usuario que ha levantado se lleva las cartas, por tanto busco por user.id
-                 for(let i=0;i<estado.jugadoresInfo.length;i++){
+                //Al decir la verdad el usuario que ha levantado se lleva las cartas, por tanto busco por user.id
+                for(let i=0;i<estado.jugadoresInfo.length;i++){
                     if(estado.jugadoresInfo[i].idJugador===request.user.id){
                         pos=i;
                         i= estado.jugadoresInfo.length; //Para salir del bucle
@@ -473,7 +480,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
             }
             response.status(200);
             //Añadir si decía la verdad o no
-            response.json({gameInfo:estado,mentiroso:mentiroso});
+            response.json({gameInfo:estado,mentiroso:mentiroso, nrCartasJugadas: nrCartasJugadas});
         }); 
     });  
 });
