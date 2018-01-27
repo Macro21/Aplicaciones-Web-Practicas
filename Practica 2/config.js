@@ -4,7 +4,7 @@ module.exports = {
         database: "mentiroso",
         host: "localhost",
         user: "root",
-        password: ""
+        password: "PEPE"
     },
 
     /* Puerto de escucha */

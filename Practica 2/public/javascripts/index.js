@@ -325,7 +325,8 @@ function mostrarMano(cartas, turno){
     for(let carta of cartas){
         let imagen = $("<img>");
         imagen.attr("src","images/"+ carta + ".png");
-        imagen.css("padding","1rem");
+        imagen.css("padding","0.3rem");
+        imagen.css("margin","0.2rem");
         if(turno){
             imagen.css("opacity","0.5")
         }
@@ -334,12 +335,21 @@ function mostrarMano(cartas, turno){
     }
     let lista = document.getElementById("cartas");
     let elems = $(lista).children();
+
     if(turno){
         for (let i = 0; i <elems.length; i++) {
             elems[i].addEventListener("click", function(){
-                $( this ).css("width","20%");
-                $( this ).css("opacity","1");
-                this.className = "selected";
+                if(this.className === "selected"){
+                    this.className = "";
+                    $( this ).css("border","none");
+                    $( this ).css("opacity","0.5");
+                }
+                else{
+                    $( this ).css("border","solid");
+                    $(this).css("border-radius","8%");
+                    $( this ).css("opacity","1");
+                    this.className = "selected";
+                }
             });
         }
     }
@@ -388,6 +398,10 @@ function realizarAccion(accion, cartas){
                     alert("El jugador anterior decía la verdad, "+user +" se lleva las cartas de la mesa.");
                 }
             }
+            if(!data.nrCartasJugadas){
+                alert("Tienes que escoger entre 1 y 3 cartas");
+                //data.gameInfo.nrCartasJugadas = true;
+            }
             actualizarInformacionPartida(gameId);
         },
         error: function (jqXHR, status, errorThrown){
@@ -395,6 +409,7 @@ function realizarAccion(accion, cartas){
         }      
     });
 }
+
 function partidaFinalizada(gameId,ganador){
     $("#partidaFinalizada").show();
     $("#partidaFinalizada").text("PARTIDA FINALIZADA. Ha ganado la partida: " +ganador.nombre);
@@ -403,6 +418,7 @@ function partidaFinalizada(gameId,ganador){
     $("#cartas").hide();
     $("#esperandoJugadores").hide();
 }
+
 function desconectar(){
     let user = $("#email").prop("value");
     let password = $("#password").prop("value");

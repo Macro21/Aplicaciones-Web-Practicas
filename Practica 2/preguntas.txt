@@ -1,6 +1,4 @@
-Crear botón para deseleccionar?
 Crear validador al introducir por primera vez el valor.
-Controlar cuando se ponen jugar cartas seleccionadas y no se selecciona nada.
 Es necesario el atributo idJugador dentro del jugadoresCartas?.
 Pintar en la tabla de color diferente al ganador.
 Al unirse a un id inexistente no hace nada.(tarda mucho en responder, parece)
