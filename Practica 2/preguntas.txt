@@ -2,3 +2,4 @@ Crear validador al introducir por primera vez el valor.
 Es necesario el atributo idJugador dentro del jugadoresCartas?.
 Pintar en la tabla de color diferente al ganador.
 Al unirse a un id inexistente no hace nada.(tarda mucho en responder, parece)
+Mirar si valor llega nulo, que pasa

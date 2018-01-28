@@ -24,7 +24,7 @@ function iniciarSesion() {
         url: "/login",
         contentType: "application/json",
         data: JSON.stringify({datosUsuario}),
-        success: function(data, state, jqXHR) {
+        success: function(data, textStatus, jqXHR) {
             if(data.usuarioCorrecto){
                 mostrarPanelPrincipal(user);
             }
@@ -32,8 +32,13 @@ function iniciarSesion() {
                 alert("Usuario o contraseña incorrectos!");
             }
         },
-        error: function (jqXHR, status, errorThrown){
-            alert("Este usuario no existe!");
+        error: function (data, textStatus, jqXHR){
+            if(data.status === 404){
+                alert("Ususario y/o contraseñas inválidos");
+            }
+            else{
+                alert("Este usuario no existe!");
+            }
         }      
     });
 };
@@ -67,12 +72,20 @@ function crearNuevoUsuario(){
         url: "/newUser",
         contentType: "application/json",
         data: JSON.stringify({newUser}),
-        success: (data, state, jqXHR)=>{
+        success: (data, textStatus, jqXHR)=>{
             alert("usuario creado correctamente");
             iniciarSesion();
         },
-        error: (jqXHR, state, errorThrown) =>{
-            alert("Se ha producido un error: " + errorThrown);
+        error: (data, jqXHR, textStatus, errorThrown) =>{
+            if(data.status === 404){
+                alert("Ususario y/o contraseñas inválidos");
+            }
+            else if(data.status === 400){
+                alert("El usuario ya existe");
+            }
+            else{
+                alert("Se ha producido un error: " + errorThrown);
+            }
         }
     });
 };
@@ -374,8 +387,6 @@ function seleccionar(){
     realizarAccion("jugar", cartas);
 };
 function escogerValor(valor){
-    alert ("He escogido el valor: " + valor);
-    console.log(this);
     $( this ).css("background","blue");
     $("#supuestoValor").prop("value",valor);
 }
@@ -386,8 +397,8 @@ function realizarAccion(accion, cartas){
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
     let gameId = $("#menu > li.active").attr("data-game-id");
-    let cartasInicio= $("#supuestoValor").prop("value");
-    if(cartasInicio ==="Introduce el supuesto valor de las cartas"){
+    let cartasInicio = $("#supuestoValor").prop("value");
+    if(cartasInicio ==="" && $("#cartasInicio").is(":visible")){
         cartasInicio=undefined;
     }
     let datos = {
@@ -415,7 +426,7 @@ function realizarAccion(accion, cartas){
                 }
             }
             if(!data.nrCartasJugadas){
-                alert("Tienes que escoger entre 1 y 3 cartas");
+                alert("Tienes que escoger entre 1 y 3 cartas y/o elegir un supuesto valor");
                 //data.gameInfo.nrCartasJugadas = true;
             }
             actualizarInformacionPartida(gameId);

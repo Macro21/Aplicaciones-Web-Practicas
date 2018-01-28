@@ -126,7 +126,7 @@
                         <div id = "botonesAccion">
                             <div id = "cartasInicio">
                                 <input type="hidden" id="supuestoValor">
-                                <button type="submit" class="cartaValor" onclick='escogerValor("AS")'>AS</button><button type="submit" class="cartaValor" onclick='escogerValor("2")'>2</button><button type="submit" class="cartaValor" onclick='escogerValor("3")'>3</button><button type="submit" class="cartaValor" onclick='escogerValor("4")'>4</button><button type="submit" class="cartaValor" onclick='escogerValor("5")'>5</button><button type="submit" class="cartaValor" onclick='escogerValor("6")'>6</button><button type="submit" class="cartaValor" onclick='escogerValor("7")'>7</button>
+                                <button type="submit" class="cartaValor" onclick='escogerValor("A")'>AS</button><button type="submit" class="cartaValor" onclick='escogerValor("2")'>2</button><button type="submit" class="cartaValor" onclick='escogerValor("3")'>3</button><button type="submit" class="cartaValor" onclick='escogerValor("4")'>4</button><button type="submit" class="cartaValor" onclick='escogerValor("5")'>5</button><button type="submit" class="cartaValor" onclick='escogerValor("6")'>6</button><button type="submit" class="cartaValor" onclick='escogerValor("7")'>7</button>
                                 <button type="submit" class="cartaValor" onclick='escogerValor("8")'>8</button><button type="submit" class="cartaValor" onclick='escogerValor("9")'>9</button><button type="submit" class="cartaValor" onclick='escogerValor("10")'>10</button><button type="submit" class="cartaValor" onclick='escogerValor("J")'>J</button><button type="submit" class="cartaValor" onclick='escogerValor("Q")'>Q</button><button type="submit" class="cartaValor" onclick='escogerValor("K")'>K</button>
                                 <!-- <input id="cartasInicio" type="text" class="form-control" value = 'Introduce el supuesto valor de las cartas'  onfocus="if (this.value == 'Introduce el supuesto valor de las cartas') this.value='';" onblur="if (this.value=='') this.value='Introduce el supuesto valor de las cartas';" > -->
                             </div>   
@@ -134,6 +134,7 @@
                             <div id="mentiroso">
                                 <button type="submit"class="btn btn-danger" id="jugarMentiroso" onclick='realizarAccion("mentiroso", null)'>¡Mentiroso!</button>
                             </div>
+                            <button type="submit"class="btn btn-primary" id="jugarDescartar" onclick='realizarAccion("descartar", null)'>Descartar Iguales</button>
                         </div>  
                         <div id="noTurno"><h4>Aún no es tu turno</h4></div>    
                     </div>                               

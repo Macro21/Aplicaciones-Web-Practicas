@@ -40,8 +40,8 @@ body{
     text-align: center;
     display: flex;
     justify-content: space-between;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 #noTurno{
     text-align: center;

@@ -9,6 +9,7 @@ const mysql = require("mysql");
 const passport = require("passport");
 const passportHTTP = require("passport-http");
 const underscore = require("underscore");
+const expressValidator = require("express-validator");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(expressValidator());
 
 const pool = mysql.createPool({
     host: config.mysqlConfig.host,
@@ -53,53 +55,74 @@ passport.use(new passportHTTP.BasicStrategy({ realm: 'Autenticacion requerida' }
 app.post("/login", (request, response)=>{
     let password = request.body.datosUsuario.password;
     let name = request.body.datosUsuario.user;
-    daoUsuario.isUserCorrect(name,(err,userInfo)=>{
-        if(err){
-            response.status(500);//internal server error
-            response.end(err.message);
-            console.log(err);
-        }
-        if(userInfo){// comprueba que el usuario exista y que tenga esa contraseña
-            
-            if(userInfo.password === password){
-                response.status(200);
-                response.json({usuarioCorrecto:true});
+    request.checkBody("datosUsuario.user", "Nombre de usuario no vacio").notEmpty();
+    request.checkBody("datosUsuario.user", "Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);
+    request.checkBody("datosUsuario.password", "La contraseña no es válida").isLength({ min: 4, max: 10 });
+    let errors = request.validationErrors();
+    if (errors) {
+        response.status(404);
+        response.json({});
+        
+    }
+    else{
+        daoUsuario.isUserCorrect(name,(err,userInfo)=>{
+            if(err){
+                response.status(500);//internal server error
+                response.end(err.message);
+                console.log(err);
+            }
+            if(userInfo){// comprueba que el usuario exista y que tenga esa contraseña
+                
+                if(userInfo.password === password){
+                    response.status(200);
+                    response.json({usuarioCorrecto:true});
+                }
+                else{
+                    response.json({usuarioCorrecto: false});
+                }
             }
             else{
+                response.status(401);
                 response.json({usuarioCorrecto: false});
             }
-        }
-        else{
-            response.status(401);
-            response.json({usuarioCorrecto: false});
-        }
-    });
+        });
+    }
 });
 
 app.post("/newUser", (request, response) => {
     let login = request.body.newUser.user;
     let pass = request.body.newUser.password;
-
-    daoUsuario.existsUser(login, (err,exist)=>{
-        if(err){
-            response.status(500);
-            console.log(err);
-        }
-        if(exist){
-            response.status(400);//bad request
-            response.json({});
-        }
-        else{
-            daoUsuario.insertUser(login,pass, (err)=>{
-                if(err){
-                    response.status(500);//internal server error
-                    response.json({});
-                }
-                response.status(201);//created
+    request.checkBody("newUser.user", "Nombre de usuario no vacio").notEmpty();
+    request.checkBody("newUser.user", "Nombre de usuario no válido").matches(/^[A-Z0-9]*$/i);
+    request.checkBody("newUser.password", "La contraseña no es válida").isLength({ min: 4, max: 10 });
+    let errors = request.validationErrors();
+    if (errors) {
+        response.status(404);
+        response.json({});
+        
+    }
+    else{
+        daoUsuario.existsUser(login, (err,exist)=>{
+            if(err){
+                response.status(500);
+                console.log(err);
+            }
+            if(exist){
+                response.status(400);//bad request
                 response.json({});
-            });
-        }
-    });
+            }
+            else{
+                daoUsuario.insertUser(login,pass, (err)=>{
+                    if(err){
+                        response.status(500);//internal server error
+                        response.json({});
+                    }
+                    response.status(201);//created
+                    response.json({});
+                });
+            }
+        });
+    }
 });
 
 app.get("/userGames",passport.authenticate('basic', {session: false}), (request, response) =>{
@@ -346,7 +369,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
         let nrCartasJugadas = true;
         
         if(datos.accion==="jugar"){ //Actualizo el estado
-            if(datos.cartas.length > 3 || datos.cartas.length <= 0){
+            if(datos.cartas.length > 3 || datos.cartas.length <= 0 || datos.cartasInicio=== undefined){
                 nrCartasJugadas = false;
             }
             else{
@@ -360,7 +383,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
                 let turnoSiguiente=(pos+1)%4;
                 estado.idTurno= estado.jugadoresInfo[turnoSiguiente].idJugador;
                 estado.idTurnoAnterior = request.user.id;
-                if(datos.cartasInicio!== undefined){
+                if(datos.cartasInicio!=="" && datos.cartasInicio!==estado.mesaInfo.supuestoValor){
                     estado.mesaInfo.supuestoValor = datos.cartasInicio;
                 }
                 estado.mesaInfo.nrCartas +=datos.cartas.length;
@@ -392,7 +415,7 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
                 estado.turno=false;
             }
         }
-        else{ //Accion == mentiroso
+        else if(datos.accion==="mentiroso"){ //Accion == mentiroso
             //Hay que averiguar si miente el jugador anterior. 
             let i=0;
             //Parsear
@@ -448,6 +471,46 @@ app.post("/accion",passport.authenticate('basic', {session: false}),(request,res
             //Borro cartas en atributo cartasUltimoJugador
             estado.cartasUltimoJugador= [];
             estado.turno=false;
+        }
+        else{ //Acción === "descartar"
+            let pos = -1;
+            for(let i=0;i<estado.jugadoresInfo.length;i++){
+                if(estado.jugadoresInfo[i].idJugador===request.user.id){
+                    pos=i;
+                    i= estado.jugadoresInfo.length;//Para salir del bucle
+                }
+            }
+            let copiaCartasJugador = estado.jugadoresCartas[pos].cartas;
+            copiaCartasJugador.sort();            
+            let contador=0;
+            for (let i=0;i<copiaCartasJugador.length-4;i++){
+                for(let j=i+1;j<i+4;j++){
+                    //Parseo
+                    let carta1=copiaCartasJugador[i];
+                    if(carta1[1]==="0"){ //Único caso en el que hay que coger 2 pos, no solo la primera
+                        carta1=carta1.slice(0,2);
+                    }
+                    else{
+                        carta1=carta1[0];
+                    }
+                    let carta2=copiaCartasJugador[j];
+                    if(carta2[1]==="0"){ //Único caso en el que hay que coger 2 pos, no solo la primera
+                        carta2=carta2.slice(0,2);
+                    }
+                    else{
+                        carta2=carta2[0];
+                    }
+                    //Comparo
+                    if(carta1 === carta2){
+                        contador ++;
+                    }
+                }
+                if(contador===3){
+                    //Cortar
+                    copiaCartasJugador.splice(i,4);
+                }
+                contador=0;
+            }
         }
         //COMPROBAR SI ALGUIEN HA GANADO
         //busco el del turno anterior en jugadoresInfo para ver su nrCartas
