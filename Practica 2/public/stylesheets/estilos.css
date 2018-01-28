@@ -42,11 +42,33 @@ body{
     justify-content: space-between;
     margin-left: 10%;
     margin-right: 10%;
-
 }
 #noTurno{
     text-align: center;
 }
 #espacio{
     margin-bottom: 1%;
+}
+.cartaValor{
+    width:30px;
+    height:30px;
+    margin: 2px;
+    text-align: center;
+    color:white;
+    background: rgb(72, 119, 219);
+    border: solid 2px;
+    border-color:gray;
+    border-radius: 25%;
+    align-items: center;
+}
+#primeraVez{
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+#cartas{
+    text-align: center;
+}
+.panel> .panel-info #primeraVez{
+    text-align: center;
 }

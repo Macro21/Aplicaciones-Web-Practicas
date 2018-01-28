@@ -335,7 +335,6 @@ function mostrarMano(cartas, turno){
     }
     let lista = document.getElementById("cartas");
     let elems = $(lista).children();
-
     if(turno){
         for (let i = 0; i <elems.length; i++) {
             elems[i].addEventListener("click", function(){
@@ -363,6 +362,12 @@ function seleccionar(){
     }
     realizarAccion("jugar", cartas);
 };
+function escogerValor(valor){
+    alert ("He escogido el valor: " + valor);
+    console.log(this);
+    $( this ).css("background","blue");
+    $("#supuestoValor").prop("value",valor);
+}
 // Si la accion es jugar, entonces el usuario ha elegido echar cartas,
 // Si la accion es mentiroso, el usuario ha decidido levantar las cartas del anterior.
 function realizarAccion(accion, cartas){ 
@@ -370,7 +375,7 @@ function realizarAccion(accion, cartas){
     let password = $("#password").prop("value");
     let cadenaBase64 = btoa(user + ":" + password);
     let gameId = $("#menu > li.active").attr("data-game-id");
-    let cartasInicio= $("#cartasInicio").prop("value");
+    let cartasInicio= $("#supuestoValor").prop("value");
     if(cartasInicio ==="Introduce el supuesto valor de las cartas"){
         cartasInicio=undefined;
     }
